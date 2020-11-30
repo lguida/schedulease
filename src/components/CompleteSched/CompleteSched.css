@@ -1,0 +1,10 @@
+.complete-schedule {
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+    margin: 10px;    
+}
+
+.num-roles {
+    width: 70px
+}

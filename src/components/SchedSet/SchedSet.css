@@ -1,0 +1,10 @@
+.schedule-settings {
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+    margin: 10px;    
+}
+
+.schedule-settings li {
+    list-style: none;
+}

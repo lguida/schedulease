@@ -1,0 +1,11 @@
+.new-schedule li {
+    list-style: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.warning {
+    color: darkred;
+}

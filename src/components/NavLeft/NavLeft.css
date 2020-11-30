@@ -1,0 +1,29 @@
+.nav-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 10px;    
+}
+
+.nav-left li {
+    text-align: center;
+    border: 1px solid black;
+    margin: 5px;
+    text-decoration: none;
+    list-style: none;
+}
+
+.nav-left li:hover {
+    background-color: aliceblue;
+}
+
+.action-button {
+    display:block;
+    text-decoration: none;
+    padding: 5px;
+    color: black;
+}
+
+.action-button.active {
+    background-color: lightblue;
+}

@@ -1,0 +1,42 @@
+header{
+    padding: 0px;
+    margin-bottom: 20px;
+}
+
+header nav{
+    margin-bottom: 0px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+header nav ul{
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+
+header nav li {
+    border-radius:  3px;
+    transition-duration: .2s;
+    border: 1px solid black;
+    text-align: center;
+    margin: 5px;
+    text-decoration: none;
+    list-style: none;
+}
+
+header nav li:hover {
+    background-color: aliceblue;
+}
+
+.nav-button {
+    display:block;
+    text-decoration: none;
+    padding: 10px;
+    color: black;
+}
+
+.nav-button.active {
+    background-color: lightblue;
+}
