@@ -4,7 +4,6 @@ import './NewSched.css'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import DatePicker from "react-datepicker"
-import TimePicker from 'react-time-picker'
 import "react-datepicker/dist/react-datepicker.css"
 
 
@@ -195,6 +194,25 @@ class NewSched extends React.Component {
         }
         return slotList
     }
+    
+    createTimeDropdownJSX = () =>{
+        return (
+            <>
+            <option value={1}>1:00</option>
+            <option value={2}>2:00</option>
+            <option value={3}>3:00</option>
+            <option value={4}>4:00</option>
+            <option value={5}>5:00</option>
+            <option value={6}>6:00</option>
+            <option value={7}>7:00</option>
+            <option value={8}>8:00</option>
+            <option value={9}>9:00</option>
+            <option value={10}>10:00</option>
+            <option value={11}>11:00</option>
+            <option value={12}>12:00</option>
+            </>
+            )
+    }
 
     createTimeslotsJSX = () => {
         const timeslots = this.createTimeslots()
@@ -269,7 +287,7 @@ class NewSched extends React.Component {
     render(){
         const timeslotsHtml = this.createTimeslotsJSX()
         const daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        
+        const timeDropdownJSX = this.createTimeDropdownJSX()
         return(
             <div className='new-schedule'>
                 <form
@@ -318,7 +336,6 @@ class NewSched extends React.Component {
                         <DatePicker onChange={this.updateEndDatetime}/>
                         <br />
                         
-                        <label>Monday:</label>
                         <table>
                             <thead>
                                 <tr>
@@ -332,89 +349,37 @@ class NewSched extends React.Component {
                                 {daysOfTheWeek.map(day =>
                                 <tr key={day}>
                                     <td>{day}</td>
-                                    <td><TimePicker 
-                                        disableClock={true} 
-                                        format="hh:mm a"
-                                        onChange={this.updateTimeRange} 
-                                        hourPlaceholder="hh"
-                                        minutePlaceholder="mm"/></td>
+                                    <td><select 
+                                        defaultValue={9}
+                                        onChange={e => this.updateTimeframe("startNum", e.target.value, day)}>
+                                            {timeDropdownJSX}
+                                        </select>
+                                        <select 
+                                            defaultValue="AM"
+                                            onChange={e => this.updateTimeframe("startAmPm", e.target.value, day)}>
+                                            <option>AM</option>
+                                            <option>PM</option>
+                                        </select>
+                                    </td>
                                     <td>to</td>
-                                    <td> <TimePicker 
-                                        disableClock={true} 
-                                        format="hh:mm a"
-                                        onChange={this.updateTimeRange} 
-                                        hourPlaceholder="hh"
-                                        minutePlaceholder="mm"/></td>
+                                    <td> <select
+                                            defaultValue={5}
+                                            onChange={e => this.updateTimeframe("startNum", e.target.value, day)}>
+                                            {timeDropdownJSX}
+                                        </select>  
+                                        <select 
+                                            defaultValue="AM"
+                                            onChange={e => this.updateTimeframe("startAmPm", e.target.value, day)}>
+                                            <option>AM</option>
+                                            <option>PM</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 )}
-                                <tr>
-                                    <td>Monday</td>
-                                    <td><TimePicker 
-                                        disableClock={true} 
-                                        format="hh:mm a"
-                                        onChange={this.updateMon} 
-                                        hourPlaceholder="hh"
-                                        minutePlaceholder="mm"/></td>
-                                    <td>to</td>
-                                    <td> <TimePicker 
-                                        disableClock={true} 
-                                        format="hh:mm a"
-                                        onChange={this.updateMon} 
-                                        hourPlaceholder="hh"
-                                        minutePlaceholder="mm"/></td>
-                                </tr>
                             </tbody>
-                            
-                            
                         </table>
-                        
-                        <select 
-                            defaultValue={9}
-                            onChange={e => this.updateTimeframe("startNum", e.target.value)}>
-                            <option value={1}>1:00</option>
-                            <option value={2}>2:00</option>
-                            <option value={3}>3:00</option>
-                            <option value={4}>4:00</option>
-                            <option value={5}>5:00</option>
-                            <option value={6}>6:00</option>
-                            <option value={7}>7:00</option>
-                            <option value={8}>8:00</option>
-                            <option value={9}>9:00</option>
-                            <option value={10}>10:00</option>
-                            <option value={11}>11:00</option>
-                            <option value={12}>12:00</option>
-                        </select>
-                        <select 
-                            defaultValue="AM"
-                            onChange={e => this.updateTimeframe("startAmPm", e.target.value)}>
-                            <option>AM</option>
-                            <option>PM</option>
-                        </select>
-                        <br/>
-                        <label>End:</label>
-                        <select 
-                            defaultValue={5}
-                            onChange={e => this.updateTimeframe("endNum", e.target.value)}>
-                            <option value={1}>1:00</option>
-                            <option value={2}>2:00</option>
-                            <option value={3}>3:00</option>
-                            <option value={4}>4:00</option>
-                            <option value={5}>5:00</option>
-                            <option value={6}>6:00</option>
-                            <option value={7}>7:00</option>
-                            <option value={8}>8:00</option>
-                            <option value={9}>9:00</option>
-                            <option value={10}>10:00</option>
-                            <option value={11}>11:00</option>
-                            <option value={12}>12:00</option>
-                        </select>
-                        <select 
-                            defaultValue="PM"
-                            onChange={e => this.updateTimeframe("endAmPm", e.target.value)}>
-                            <option>AM</option>
-                            <option>PM</option>
-                        </select>
                     </div>
+                    
                     <label htmlFor='Avail'>Select Available Timeslots</label>
                     <br/>
                     <div name='Avail'>
