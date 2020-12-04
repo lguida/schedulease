@@ -3,6 +3,9 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 import './NewSched.css'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import DatePicker from "react-datepicker"
+import TimePicker from 'react-time-picker'
+import "react-datepicker/dist/react-datepicker.css"
 
 
 class NewSched extends React.Component {
@@ -89,6 +92,18 @@ class NewSched extends React.Component {
                 endTimeframe: { hour: this.state.endTimeframe.hour, ampm: value} 
             })
         }
+    }
+
+    updateStartDatetime = (value) =>{
+        console.log(value)
+    }
+
+    updateEndDatetime = (value) =>{
+        console.log(value)
+    }
+
+    updateTimeRange = (value) =>{
+        console.log(value)
     }
 
     updateTimeslots = (e) => {
@@ -253,6 +268,8 @@ class NewSched extends React.Component {
 
     render(){
         const timeslotsHtml = this.createTimeslotsJSX()
+        const daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        
         return(
             <div className='new-schedule'>
                 <form
@@ -295,6 +312,62 @@ class NewSched extends React.Component {
                     <label htmlFor="timeframe">Select a timeframe to use:</label>
                     <div name='timeframe'>
                         <label>Start:</label>
+                        <DatePicker onChange={this.updateStartDatetime}/>
+                        <br />
+                        <label>End:</label>
+                        <DatePicker onChange={this.updateEndDatetime}/>
+                        <br />
+                        
+                        <label>Monday:</label>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Start Time</th>
+                                    <th></th>
+                                    <th>End Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {daysOfTheWeek.map(day =>
+                                <tr key={day}>
+                                    <td>{day}</td>
+                                    <td><TimePicker 
+                                        disableClock={true} 
+                                        format="hh:mm a"
+                                        onChange={this.updateTimeRange} 
+                                        hourPlaceholder="hh"
+                                        minutePlaceholder="mm"/></td>
+                                    <td>to</td>
+                                    <td> <TimePicker 
+                                        disableClock={true} 
+                                        format="hh:mm a"
+                                        onChange={this.updateTimeRange} 
+                                        hourPlaceholder="hh"
+                                        minutePlaceholder="mm"/></td>
+                                </tr>
+                                )}
+                                <tr>
+                                    <td>Monday</td>
+                                    <td><TimePicker 
+                                        disableClock={true} 
+                                        format="hh:mm a"
+                                        onChange={this.updateMon} 
+                                        hourPlaceholder="hh"
+                                        minutePlaceholder="mm"/></td>
+                                    <td>to</td>
+                                    <td> <TimePicker 
+                                        disableClock={true} 
+                                        format="hh:mm a"
+                                        onChange={this.updateMon} 
+                                        hourPlaceholder="hh"
+                                        minutePlaceholder="mm"/></td>
+                                </tr>
+                            </tbody>
+                            
+                            
+                        </table>
+                        
                         <select 
                             defaultValue={9}
                             onChange={e => this.updateTimeframe("startNum", e.target.value)}>

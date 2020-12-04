@@ -104,7 +104,19 @@ class AvailForm extends React.Component {
 
     handleSubmit = (e, callback, schedId) => {
         e.preventDefault()
-        const availResponsesToAdd = {
+        let availList = []
+        let i
+        for (i=0; i < this.state.timeslots.length; i++){
+            availList.push(
+            {
+                "role": this.state.role,
+                "timeslot": this.state.timeslots[i],
+                "scheduleId": schedId,
+                "personId": this.state.email,
+            
+            })
+        }
+        const personToAdd = {
             "id": 6, //need to add id system
             "firstName": this.state.firstName.value,
             "lastName": this.state.lastName.value,
@@ -113,7 +125,7 @@ class AvailForm extends React.Component {
             "timeframes": this.state.timeslots,
             "scheduleId": schedId
         }
-        callback(availResponsesToAdd) 
+        callback(personToAdd, availList) 
         this.props.history.push(`/dashboard/responses/${schedId}`)
     }
 

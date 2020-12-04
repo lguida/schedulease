@@ -23,6 +23,8 @@ class App extends React.Component {
     schedules: store.schedules,
     users: store.users,
     availResponses: store.availResponses,
+    avail: store.avail,
+    people: store.people
   }
 
   addSchedule = schedule => {
@@ -31,9 +33,10 @@ class App extends React.Component {
     })
   }
 
-  addAvail = avail => {
+  addAvail = (person, avail) => {
     this.setState({
-      availResponses: [...this.state.availResponses, avail]
+      avail: [...this.state.avail, avail],
+      people: [...this.state.people, person],
     })
   }
 
@@ -42,6 +45,8 @@ class App extends React.Component {
       schedules: this.state.schedules,
       user: this.state.users,
       availResponses: this.state.availResponses,
+      avail: this.state.avail,
+      people: this.state.people,
       addSchedule: this.addSchedule,
       addAvail: this.addAvail,
     }

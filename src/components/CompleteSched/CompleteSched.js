@@ -50,8 +50,21 @@ class CompleteSched extends React.Component {
         //const roles = schedule.roles
         let list = []
         let i, j, id = 0
-        for (i=0; i <responses.length; i++){
-            for (j=0; j <responses[i].timeslots.length; j++){
+        let tsList = []
+        for (i=0; i < schedule.timeslots.length; i++){
+            tsList.push({
+                "value": schedule.timeslots[i],
+                "responseIds": []
+            })
+        }
+        // for (i=0; i < schedule.timeslots.length; i++){
+        //     for (j=0; j <responses.length; j++){
+        //         if (responses[j])
+        //     }
+        // }
+        
+        for (i=0; i < responses.length; i++){ //goes through responses
+            for (j=0; j <responses[i].timeslots.length; j++){ //goes through timeslots
                 list.push(
                     {
                         "id": id,
@@ -59,25 +72,20 @@ class CompleteSched extends React.Component {
                         "firstName": responses[i].firstName,
                         "lastName": responses[i].lastName,
                         "email": responses[i].email,
-                        "role": responses[i].role
+                        "role": responses[i].role,
+                        "show": true, //probably default this to false
                     }
                 )
+                if (responses[i].timeslots[j] === tsList[j].value){
+                    tsList[j].responseIds.push(responses[i].id)
+                }
+                
                 id += 1
             }
         }
-        let byTimeslot = []
-        let timeslotTotals = []
-        let count =0
-        for (i = 0; i < schedule.timeslots.length; i++){
-            count = 0
-            for (j=0; j < list.length; i++){
-                if (list[j].timeslot = schedule.timeslots[i]){
-                    count += 1
-                }
-            }
-            timeslotTotals.push(count)
-        }
-        console.log(timeslotTotals)
+        console.log(tsList)
+
+
         list.sort((a, b) => {
             var nameA = a.timeslot.toUpperCase(); // ignore upper and lowercase
             var nameB = b.timeslot.toUpperCase(); // ignore upper and lowercase
@@ -108,7 +116,7 @@ class CompleteSched extends React.Component {
             roles: schedule.roles,
             roleNums: roleNums,
             roleDups: roleDups,
-            timeslots: schedule.timeslots
+            //timeslots: schedule.timeslots
         })
     }
 

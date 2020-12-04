@@ -4,6 +4,8 @@ const ScheduleaseContext = React.createContext({
     schedules: [],
     users: [],
     availResponses: [],
+    avail: [],
+    people: [],
     addSchedule: () => {},
     addAvail: () => {},
 })

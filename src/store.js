@@ -43,16 +43,28 @@ const store =  {
         }
 
     ],
-    "availResponses": [
+    "people":[
         {
-            "id": 1,
+            "email": "shomles@gmail.com",
             "firstName": "Sherlock",
             "lastName": "Holmes",
-            "email": "shomles@gmail.com",
+        }
+    ],
+    "avail": [
+        {
             "role": "Participant",
-            "timeslots": ["9:00AM", "10:00AM"],
-            "scheduleId": 1
+            "timeslot": "9:00AM",
+            "scheduleId": 1,
+            "personId": "shomles@gmail.com",
         },
+        {
+            "role": "Participant",
+            "timeslot": "10:00AM",
+            "scheduleId": 1,
+            "personId": "shomles@gmail.com",
+        }
+    ],
+    "availResponses": [
         {
             "id": 2,
             "firstName": "Mycroft",
