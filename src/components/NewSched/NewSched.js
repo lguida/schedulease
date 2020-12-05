@@ -22,12 +22,95 @@ class NewSched extends React.Component {
             duration: "1 hour",
             timeslots: [],
             timeslotTouched: false,
+            startDate: '',
+            endDate: '',
+            days: [
+                {
+                    value: "Monday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Tuesday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Wednesday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Thursday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Friday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Saturday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },
+                {
+                    value: "Sunday",
+                    start: {
+                        hour: 9,
+                        min: 0,
+                        ampm: "AM"},
+                    end: {
+                        hour: 17, 
+                        min: 0,
+                        ampm: "PM"},
+                },   
+            ],
             startTimeframe: {
                 hour: 9,
-                ampm: "AM"},
+                ampm: "AM"
+            },
             endTimeframe: {
-                hour: 5, 
-                ampm: "PM"},
+                hour: 9,
+                ampm: "AM",
+            }
             
         }
     }
@@ -70,38 +153,128 @@ class NewSched extends React.Component {
         this.setState({ duration: duration })
     }
 
-    updateTimeframe = (which, value) => {
-        if (which === "startNum"){
-            this.setState({
-                startTimeframe: { hour: value, ampm: this.state.startTimeframe.ampm} 
-            })
+    updateTimeframe = (startEnd, hourAmpm, value, day) => {
+        console.log(day)
+        const dayName = this.state.days.find(wkday =>
+            wkday.value === day)
+        const dayIndex = this.state.days.indexOf(dayName)
+        let shallowCopy = this.state.days
+        let  dayToUpdate = {}
+        let newHour, newMin
+
+        if (startEnd === "start"){
+            if (hourAmpm === "Num"){
+                if (this.state.days[dayIndex].start.ampm === "PM"){
+                    newHour = parseInt(value) + 12
+                }
+                else{
+                    newHour = parseInt(value)
+                }
+                const newFloat = parseFloat(value) - newHour
+                if (newFloat === 0){
+                    newMin = 0
+                }
+                else if (newFloat === .25){
+                    newMin = 15
+                }
+                else if (newFloat === .5){
+                    newMin = 30
+                }
+                else{
+                    newMin = 45
+                }
+
+                dayToUpdate = {
+                    value: this.state.days[dayIndex].value,
+                    start: {
+                        hour: newHour,
+                        min: newMin,
+                        ampm: this.state.days[dayIndex].start.ampm},
+                    end: {
+                        hour: this.state.days[dayIndex].end.hour, 
+                        min: this.state.days[dayIndex].end.min,
+                        ampm: this.state.days[dayIndex].end.ampm},
+                }
+            }
+            else {
+                dayToUpdate = {
+                    value: this.state.days[dayIndex].value,
+                    start: {
+                        hour: this.state.days[dayIndex].start.hour,
+                        min: this.state.days[dayIndex].start.min,
+                        ampm: value},
+                    end: {
+                        hour: this.state.days[dayIndex].end.hour, 
+                        min: this.state.days[dayIndex].end.min,
+                        ampm: this.state.days[dayIndex].end.ampm},
+                }
+            }
         }
-        if (which === "startAmPm"){
-            this.setState({
-                startTimeframe: { hour: this.state.startTimeframe.hour, ampm: value} 
-            })
+        else {
+            if (hourAmpm === "Num"){
+                if (this.state.days[dayIndex].end.ampm === "PM"){
+                    newHour = parseInt(value) + 12
+                }
+                else{
+                    newHour = parseInt(value)
+                }
+                const newFloat = parseFloat(value) - newHour
+                if (newFloat === 0){
+                    newMin = 0
+                }
+                else if (newFloat === .25){
+                    newMin = 15
+                }
+                else if (newFloat === .5){
+                    newMin = 30
+                }
+                else{
+                    newMin = 45
+                }
+
+                dayToUpdate = {
+                    value: this.state.days[dayIndex].value,
+                    start: {
+                        hour: newHour,
+                        min: newMin,
+                        ampm: this.state.days[dayIndex].end.ampm},
+                    end: {
+                        hour: this.state.days[dayIndex].end.hour, 
+                        min: this.state.days[dayIndex].end.min,
+                        ampm: this.state.days[dayIndex].end.ampm},
+                }
+            }
+            else {
+                dayToUpdate = {
+                    value: this.state.days[dayIndex].value,
+                    start: {
+                        hour: this.state.days[dayIndex].end.hour,
+                        min: this.state.days[dayIndex].end.min,
+                        ampm: value},
+                    end: {
+                        hour: this.state.days[dayIndex].end.hour, 
+                        min: this.state.days[dayIndex].end.min,
+                        ampm: this.state.days[dayIndex].end.ampm},
+                }
+            }
         }
-        if (which === "endNum"){
-            this.setState({
-                endTimeframe: { hour: value, ampm: this.state.endTimeframe.ampm} 
-            })
-        }
-        if (which === "endAmPm"){
-            this.setState({
-                endTimeframe: { hour: this.state.endTimeframe.hour, ampm: value} 
-            })
-        }
+
+        shallowCopy[dayIndex] = dayToUpdate
+
+        this.setState({
+            days: shallowCopy
+        })
     }
 
     updateStartDatetime = (value) =>{
-        console.log(value)
+        this.setState({ startDate: value })
     }
 
     updateEndDatetime = (value) =>{
-        console.log(value)
+        this.setState({ endDate: value })
     }
 
-    updateTimeRange = (value) =>{
+    updateTimeRange = (value) => {
         console.log(value)
     }
 
@@ -196,21 +369,16 @@ class NewSched extends React.Component {
     }
     
     createTimeDropdownJSX = () =>{
+        let times = [1,2,3,4,5,6,7,8,9,10,11,12]
         return (
-            <>
-            <option value={1}>1:00</option>
-            <option value={2}>2:00</option>
-            <option value={3}>3:00</option>
-            <option value={4}>4:00</option>
-            <option value={5}>5:00</option>
-            <option value={6}>6:00</option>
-            <option value={7}>7:00</option>
-            <option value={8}>8:00</option>
-            <option value={9}>9:00</option>
-            <option value={10}>10:00</option>
-            <option value={11}>11:00</option>
-            <option value={12}>12:00</option>
-            </>
+            times.map(time =>
+                <>
+                <option value={time}>{time}:00</option>
+                <option value={(time + .25)}>{time}:15</option>
+                <option value={(time + .5)}>{time}:30</option>
+                <option value={(time + .75)}>{time}:45</option>
+                </>
+                )
             )
     }
 
@@ -292,12 +460,14 @@ class NewSched extends React.Component {
             <div className='new-schedule'>
                 <form
                     onSubmit={e => {this.handleSubmit(e, this.context.addSchedule)}}>
+                        
                     <label htmlFor='sched-name'>Schedule name:</label>
                     <input  
                         type='text'
                         name='sched-name'
                         onChange={e => this.updateName(e.target.value)}/>
                     <br/>
+
                     <label htmlFor='roles-input'>Roles:</label>
                     <input 
                         type='text' 
@@ -318,6 +488,7 @@ class NewSched extends React.Component {
                     </ul>
                     <span className={this.state.warning}>Roles names must be distinct</span>
                     <br/>
+
                     <label htmlFor='meeting-duration'>Meeting duration:</label>
                     <select
                         defaultValue="1 hour"
@@ -351,12 +522,12 @@ class NewSched extends React.Component {
                                     <td>{day}</td>
                                     <td><select 
                                         defaultValue={9}
-                                        onChange={e => this.updateTimeframe("startNum", e.target.value, day)}>
+                                        onChange={e => this.updateTimeframe("start", "Num", e.target.value, day)}>
                                             {timeDropdownJSX}
                                         </select>
                                         <select 
                                             defaultValue="AM"
-                                            onChange={e => this.updateTimeframe("startAmPm", e.target.value, day)}>
+                                            onChange={e => this.updateTimeframe("start", "AmPm", e.target.value, day)}>
                                             <option>AM</option>
                                             <option>PM</option>
                                         </select>
@@ -364,12 +535,12 @@ class NewSched extends React.Component {
                                     <td>to</td>
                                     <td> <select
                                             defaultValue={5}
-                                            onChange={e => this.updateTimeframe("startNum", e.target.value, day)}>
+                                            onChange={e => this.updateTimeframe("end","Num", e.target.value, day)}>
                                             {timeDropdownJSX}
                                         </select>  
                                         <select 
                                             defaultValue="AM"
-                                            onChange={e => this.updateTimeframe("startAmPm", e.target.value, day)}>
+                                            onChange={e => this.updateTimeframe("end","AmPm", e.target.value, day)}>
                                             <option>AM</option>
                                             <option>PM</option>
                                         </select>
