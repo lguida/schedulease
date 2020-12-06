@@ -17,6 +17,7 @@ import CompleteSharing from './components/CompleteSharing/CompleteSharing'
 import AvailFrom from './components/AvailForm/AvailForm'
 import store from './store'
 import ScheduleaseContext from './ScheduleaseContext'
+import { relativeTimeThreshold } from 'moment';
 
 class App extends React.Component {
   state = {
@@ -24,7 +25,10 @@ class App extends React.Component {
     users: store.users,
     availResponses: store.availResponses,
     avail: store.avail,
-    people: store.people
+    people: store.people,
+    roles: [],
+    timeslots: [],
+    completed: [],
   }
 
   addSchedule = schedule => {
@@ -40,6 +44,45 @@ class App extends React.Component {
     })
   }
 
+  convertFloatHoursToMinutes = (toConvert) => {
+    const newFloat = parseFloat(toConvert) - parseInt(toConvert)
+    let newMin
+    if (newFloat === 0){
+        newMin = 0
+    }
+    else if (newFloat === .25){
+        newMin = 15
+    }
+    else if (newFloat === .5){
+        newMin = 30
+    }
+    else{
+        newMin = 45
+    }
+    return {
+      hour: parseInt(toConvert),
+      min: newMin
+    }
+  }
+  
+  convertMinutesToFloat = (hour, minute) => {
+    let newFloat
+    if (minute === 0){
+      newFloat = 0
+    }
+    else if (minute === 15){
+      newFloat = .25
+    }
+    else if (minute === 30){
+        newFloat = .5
+    }
+    else{
+        newFloat = .75
+    }
+    const final = parseFloat(hour) + newFloat
+    return final
+  }
+
   render(){
     const contextValue = {
       schedules: this.state.schedules,
@@ -47,8 +90,13 @@ class App extends React.Component {
       availResponses: this.state.availResponses,
       avail: this.state.avail,
       people: this.state.people,
+      roles: this.state.roles,
+      timeslots: this.state.timeslots,
+      completed: this.state.completed,
       addSchedule: this.addSchedule,
       addAvail: this.addAvail,
+      convertFloatHoursToMinutes: this.convertFloatHoursToMinutes,
+      convertMinutesToFloat: this.convertMinutesToFloat,
     }
     return (
       <>

@@ -5,6 +5,8 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import TimeSpanPickerPerDay from "../TimeSpanPickerPerDay/TimeSpanPickerPerDay"
+import NewTimeslots from "../NewTimeslots/NewTimeslots"
 
 
 class NewSched extends React.Component {
@@ -153,119 +155,6 @@ class NewSched extends React.Component {
         this.setState({ duration: duration })
     }
 
-    updateTimeframe = (startEnd, hourAmpm, value, day) => {
-        console.log(day)
-        const dayName = this.state.days.find(wkday =>
-            wkday.value === day)
-        const dayIndex = this.state.days.indexOf(dayName)
-        let shallowCopy = this.state.days
-        let  dayToUpdate = {}
-        let newHour, newMin
-
-        if (startEnd === "start"){
-            if (hourAmpm === "Num"){
-                if (this.state.days[dayIndex].start.ampm === "PM"){
-                    newHour = parseInt(value) + 12
-                }
-                else{
-                    newHour = parseInt(value)
-                }
-                const newFloat = parseFloat(value) - newHour
-                if (newFloat === 0){
-                    newMin = 0
-                }
-                else if (newFloat === .25){
-                    newMin = 15
-                }
-                else if (newFloat === .5){
-                    newMin = 30
-                }
-                else{
-                    newMin = 45
-                }
-
-                dayToUpdate = {
-                    value: this.state.days[dayIndex].value,
-                    start: {
-                        hour: newHour,
-                        min: newMin,
-                        ampm: this.state.days[dayIndex].start.ampm},
-                    end: {
-                        hour: this.state.days[dayIndex].end.hour, 
-                        min: this.state.days[dayIndex].end.min,
-                        ampm: this.state.days[dayIndex].end.ampm},
-                }
-            }
-            else {
-                dayToUpdate = {
-                    value: this.state.days[dayIndex].value,
-                    start: {
-                        hour: this.state.days[dayIndex].start.hour,
-                        min: this.state.days[dayIndex].start.min,
-                        ampm: value},
-                    end: {
-                        hour: this.state.days[dayIndex].end.hour, 
-                        min: this.state.days[dayIndex].end.min,
-                        ampm: this.state.days[dayIndex].end.ampm},
-                }
-            }
-        }
-        else {
-            if (hourAmpm === "Num"){
-                if (this.state.days[dayIndex].end.ampm === "PM"){
-                    newHour = parseInt(value) + 12
-                }
-                else{
-                    newHour = parseInt(value)
-                }
-                const newFloat = parseFloat(value) - newHour
-                if (newFloat === 0){
-                    newMin = 0
-                }
-                else if (newFloat === .25){
-                    newMin = 15
-                }
-                else if (newFloat === .5){
-                    newMin = 30
-                }
-                else{
-                    newMin = 45
-                }
-
-                dayToUpdate = {
-                    value: this.state.days[dayIndex].value,
-                    start: {
-                        hour: newHour,
-                        min: newMin,
-                        ampm: this.state.days[dayIndex].end.ampm},
-                    end: {
-                        hour: this.state.days[dayIndex].end.hour, 
-                        min: this.state.days[dayIndex].end.min,
-                        ampm: this.state.days[dayIndex].end.ampm},
-                }
-            }
-            else {
-                dayToUpdate = {
-                    value: this.state.days[dayIndex].value,
-                    start: {
-                        hour: this.state.days[dayIndex].end.hour,
-                        min: this.state.days[dayIndex].end.min,
-                        ampm: value},
-                    end: {
-                        hour: this.state.days[dayIndex].end.hour, 
-                        min: this.state.days[dayIndex].end.min,
-                        ampm: this.state.days[dayIndex].end.ampm},
-                }
-            }
-        }
-
-        shallowCopy[dayIndex] = dayToUpdate
-
-        this.setState({
-            days: shallowCopy
-        })
-    }
-
     updateStartDatetime = (value) =>{
         this.setState({ startDate: value })
     }
@@ -274,20 +163,22 @@ class NewSched extends React.Component {
         this.setState({ endDate: value })
     }
 
-    updateTimeRange = (value) => {
-        console.log(value)
+    updateTimeframe = (value) => {
+        this.setState({
+            days: value
+        })
     }
 
-    updateTimeslots = (e) => {
-        if (e.target.checked){
+    updateTimeslots = (isChecked, object) => {
+        if (isChecked){
             this.setState ({
-                timeslots: [...this.state.timeslots, e.target.value],
+                timeslots: [...this.state.timeslots, object],
                 timeslotTouched: true
             })
         }
         else{
             let newTimeslots = this.state.timeslots.filter(t =>
-                t !== e.target.value)
+                t.time !== object.time && t.day !== object.day)
             this.setState({
                 timeslots: newTimeslots,
                 timeslotTouched: true
@@ -295,122 +186,6 @@ class NewSched extends React.Component {
         } 
     }
    
-    createTimeslots = () => {
-        let startMT, endMT, i
-        let slotList = []
-
-        if (this.state.startTimeframe.ampm === "PM"){
-            startMT = parseInt(this.state.startTimeframe.hour) + 12
-        }
-        else{
-            startMT = parseInt(this.state.startTimeframe.hour)
-        }
-        if (this.state.endTimeframe.ampm === "PM"){
-            endMT = parseInt(this.state.endTimeframe.hour) + 12
-        }
-        else{
-            endMT = parseInt(this.state.endTimeframe.hour)
-        }
-
-
-        if (this.state.duration === "15 minutes"){
-            slotList = []
-            for (i=startMT; i <= endMT; i++){
-                if (i>12){
-                    slotList = [...slotList, 
-                        (i - 12) + ":00PM",
-                        (i - 12) + ":15PM",
-                        (i - 12) + ":30PM",
-                        (i - 12) + ":45PM",
-                    ]
-                }
-                else{
-                    slotList = [...slotList, 
-                        i + ":00AM",
-                        i + ":15AM",
-                        i + ":30AM",
-                        i + ":45AM",
-                    ]
-                }
-            }
-        }
-        if (this.state.duration === "30 minutes"){
-            slotList = []
-            for (i=startMT; i <= endMT; i++){
-                if (i>12){
-                    slotList = [...slotList, 
-                        (i - 12) + ":00PM",
-                        (i - 12) + ":30PM",
-                    ]
-                }
-                else{
-                    slotList = [...slotList, 
-                        i + ":00AM",
-                        i + ":30AM",
-                    ]
-                }
-            }
-        }
-        if (this.state.duration === "1 hour"){
-            slotList = []
-            for (i=startMT; i <= endMT; i++){
-                if (i>12){
-                    slotList = [...slotList, (i - 12) + ":00PM"]
-                }
-                else{
-                    slotList = [...slotList, i + ":00AM"]
-                }
-            }
-        }
-        if (startMT === endMT){
-            slotList = ['same']
-        }
-        return slotList
-    }
-    
-    createTimeDropdownJSX = () =>{
-        let times = [1,2,3,4,5,6,7,8,9,10,11,12]
-        return (
-            times.map(time =>
-                <>
-                <option value={time}>{time}:00</option>
-                <option value={(time + .25)}>{time}:15</option>
-                <option value={(time + .5)}>{time}:30</option>
-                <option value={(time + .75)}>{time}:45</option>
-                </>
-                )
-            )
-    }
-
-    createTimeslotsJSX = () => {
-        const timeslots = this.createTimeslots()
-
-        if (timeslots.length === 0){
-            return(
-                <span className='warning'>The start timeframe must be before the end timeframe.</span>
-            )
-        }
-        if (timeslots[0] === 'same'){
-            return (
-                <span className='warning'>The start and end of the timeframe can't be the same.</span>
-            )
-        }
-        else{
-            return (
-                timeslots.map(timeslot => 
-                    <>
-                    <input 
-                        type="checkbox" 
-                        key={timeslot} 
-                        name={timeslot} 
-                        value={timeslot}
-                        onChange={e => this.updateTimeslots(e)}/>
-                    <label key={timeslot + "label"} htmlFor={timeslot}>{timeslot}</label><br/>
-                    </>)
-            )
-        }
-    }
-
     validateNewSched = () => {
         const name = this.state.scheduleName.value.trim()
         const dup = this.context.schedules.filter(sched =>
@@ -453,9 +228,6 @@ class NewSched extends React.Component {
     }
 
     render(){
-        const timeslotsHtml = this.createTimeslotsJSX()
-        const daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        const timeDropdownJSX = this.createTimeDropdownJSX()
         return(
             <div className='new-schedule'>
                 <form
@@ -495,6 +267,7 @@ class NewSched extends React.Component {
                         onChange={e => this.updateDuration(e.target.value)}>
                         <option>15 minutes</option>
                         <option>30 minutes</option>
+                        <option>45 minutes</option>
                         <option>1 hour</option>
                     </select>
                     <br/>
@@ -507,55 +280,21 @@ class NewSched extends React.Component {
                         <DatePicker onChange={this.updateEndDatetime}/>
                         <br />
                         
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Day</th>
-                                    <th>Start Time</th>
-                                    <th></th>
-                                    <th>End Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {daysOfTheWeek.map(day =>
-                                <tr key={day}>
-                                    <td>{day}</td>
-                                    <td><select 
-                                        defaultValue={9}
-                                        onChange={e => this.updateTimeframe("start", "Num", e.target.value, day)}>
-                                            {timeDropdownJSX}
-                                        </select>
-                                        <select 
-                                            defaultValue="AM"
-                                            onChange={e => this.updateTimeframe("start", "AmPm", e.target.value, day)}>
-                                            <option>AM</option>
-                                            <option>PM</option>
-                                        </select>
-                                    </td>
-                                    <td>to</td>
-                                    <td> <select
-                                            defaultValue={5}
-                                            onChange={e => this.updateTimeframe("end","Num", e.target.value, day)}>
-                                            {timeDropdownJSX}
-                                        </select>  
-                                        <select 
-                                            defaultValue="AM"
-                                            onChange={e => this.updateTimeframe("end","AmPm", e.target.value, day)}>
-                                            <option>AM</option>
-                                            <option>PM</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                )}
-                            </tbody>
-                        </table>
+                        <TimeSpanPickerPerDay 
+                            updateTimeframe={this.updateTimeframe}
+                            days={this.state.days}/>
+
                     </div>
                     
                     <label htmlFor='Avail'>Select Available Timeslots</label>
                     <br/>
-                    <div name='Avail'>
-                        {timeslotsHtml}
-                    </div>
+
+                    <NewTimeslots 
+                        days={this.state.days}
+                        duration={this.state.duration}
+                        updateTimeslots={this.updateTimeslots}
+                    />
+                    
                     <button 
                         type='submit'
                         disabled={this.validateNewSched()}
@@ -577,5 +316,4 @@ NewSched.propTypes = {
 }
 
 //create some kind of default "General" role if no additional roles are provided
-//figure out how to display timeslots in 2 columns perhaps 4 for 15 min intervals?
-//Then: add completed schedule to store.
+//rework the validation and warnings

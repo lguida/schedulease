@@ -6,8 +6,13 @@ const ScheduleaseContext = React.createContext({
     availResponses: [],
     avail: [],
     people: [],
+    roles: [],
+    timeslots: [],
+    completed: [],
     addSchedule: () => {},
     addAvail: () => {},
+    convertFloatHoursToMinutes: () => {},
+    convertMinutesToFloat: () => {},
 })
 
 export default ScheduleaseContext
