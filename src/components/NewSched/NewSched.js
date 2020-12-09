@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import TimeSpanPickerPerDay from "../TimeSpanPickerPerDay/TimeSpanPickerPerDay"
 import NewTimeslots from "../NewTimeslots/NewTimeslots"
+import { v4 as uuidv4 } from 'uuid'
 
 
 class NewSched extends React.Component {
@@ -210,20 +211,30 @@ class NewSched extends React.Component {
 
     handleSubmit = (e, callback) => {
         e.preventDefault()
+        const newSchedId = uuidv4()
         const scheduleToAdd = {
-            "id": 3, //need to figure out id system uuid?
+            "id": newSchedId,
             "schedule_name": this.state.scheduleName.value,
             "status": "open",
-            "deadline": "Dec 5th, 2020",// needs to be added
             "responses": 0,
-            "roles": this.state.roles,
-            "timeslots": this.state.timeslots,
-            "startTimeframe:": this.state.startTimeframe,
-            "endTimeframe": this.state.endTimeframe,
+            "startDate:": this.state.startDate,
+            "endDate": this.state.endDate,
             "meeting_duration": this.state.duration
-
         }
-        callback(scheduleToAdd)
+        let rolesToAdd = []
+        this.state.roles.map(role => 
+            rolesToAdd.push({
+                "schedule_id": newSchedId,
+                "role": role,
+            }))
+        let timeslotsToAdd = []
+        this.state.timeslots.map(ts => 
+            timeslotsToAdd.push({
+                "schedule_id": newSchedId,
+                "timeslot": ts.time,
+                "day": ts.day
+            }))
+        callback(scheduleToAdd, rolesToAdd, timeslotsToAdd)
         this.props.history.push('/dashboard/schedule-list')
     }
 
@@ -291,6 +302,7 @@ class NewSched extends React.Component {
 
                     <NewTimeslots 
                         days={this.state.days}
+                        timeslotsState={this.state.timeslots}
                         duration={this.state.duration}
                         updateTimeslots={this.updateTimeslots}
                     />
@@ -317,3 +329,7 @@ NewSched.propTypes = {
 
 //create some kind of default "General" role if no additional roles are provided
 //rework the validation and warnings
+    //validate that there is a start and end date
+//select all function
+//display start and end date
+

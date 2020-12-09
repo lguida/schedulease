@@ -1,106 +1,156 @@
 const store =  {
     "schedules": [
         {
-            "id": 1,
+            "id": "74a0636e-38c1-11eb-adc1-0242ac120002",
             "schedule_name": "My First Schedule",
             "status": "open",
-            "deadline": "Dec 5th, 2020",
             "responses": 5,
-            "roles": ["Moderator", "Participant"],
-            "timeslots": ["9:00AM", "9:30AM", "10:00AM","10:30AM"],
-            "startTimeframe:": {
-                "hour": 9,
-                "ampm": "AM"},
-            "endTimeframe": {
-                "hour": 5, 
-                "ampm": "PM"},
+            "startDate:": new Date(),
+            "endDate": new Date(),
             "meeting_duration": "30 minutes"
         },
         {
-            "id": 2,
+            "id": "67b73060-38c1-11eb-adc1-0242ac120002",
             "schedule_name": "End of year meetings",
             "status": "open",
-            "deadline": "Dec 20th, 2020",
             "responses": 3,
-            "roles": ["Manager", "Employee"],
-            "timeslots": ["12:00PM", "1:00PM", "2:00PM"],
-            "startTimeframe:": {
-                "hour": 9,
-                "ampm": "AM"},
-            "endTimeframe": {
-                "hour": 5, 
-                "ampm": "PM"},
+            "startDate:": new Date(),
+            "endDate": new Date(),
             "meeting_duration": "1 hour"
-        }
+        },
     ],
-    "users": [
+    "people": [
         {
-            "id": 1,
-            "username": "lguida",
+            "id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
             "email": "lguida@sas.upenn.edu",
+            "account": true,
+            "firstName": "Lucy",
+            "lastName": "Guida",
+            "username": "lguida",
             "password": "lucypass1200",
-            "schedules": [1, 2]
-        }
-
-    ],
-    "people":[
+            "schedules": ["74a0636e-38c1-11eb-adc1-0242ac120002", "67b73060-38c1-11eb-adc1-0242ac120002"]
+        },
         {
+            "id": "46efe446-38c4-11eb-adc1-0242ac120002",
+            "account": false,
             "email": "shomles@gmail.com",
             "firstName": "Sherlock",
             "lastName": "Holmes",
+            "username": "",
+            "password": "",
+            "schedules": []
+        },
+        {
+            "id": "3875b5dc-3985-11eb-adc1-0242ac120002",
+            "account": false,
+            "email": "mholmes@gmail.com",
+            "firstName": "Mycroft",
+            "lastName": "Holmes",
+            "username": "",
+            "password": "",
+            "schedules": []
+        },
+        {
+            "id": "e5a61e94-3986-11eb-adc1-0242ac120002",
+            "account": false,
+            "email": "glestrade@scotlandyard.com",
+            "firstName": "Greg",
+            "lastName": "Lestrade",
+            "username": "",
+            "password": "",
+            "schedules": []
         }
+
+
     ],
     "avail": [
         {
-            "role": "Participant",
-            "timeslot": "9:00AM",
-            "scheduleId": 1,
-            "personId": "shomles@gmail.com",
+            "timeslot": "01135610-38c4-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
+            "role": "Manager"
         },
         {
-            "role": "Participant",
-            "timeslot": "10:00AM",
-            "scheduleId": 1,
-            "personId": "shomles@gmail.com",
-        }
+            "timeslot": "f5c13c00-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
+            "role": "Manager"
+        },
+        {
+            "timeslot": "e912d144-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
+            "role": "Manager"
+        },
+        {
+            "timeslot": "e912d144-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "46efe446-38c4-11eb-adc1-0242ac120002",
+            "role": "Participant"
+        },
+        {
+            "timeslot": "e912d144-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "3875b5dc-3985-11eb-adc1-0242ac120002",
+            "role": "Participant"
+        },
+        {
+            "timeslot": "f5c13c00-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "3875b5dc-3985-11eb-adc1-0242ac120002",
+            "role": "Participant"
+        },
+
+        {
+            "timeslot": "01135610-38c4-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "e5a61e94-3986-11eb-adc1-0242ac120002",
+            "role": "Manager"
+        },
+        {
+            "timeslot": "f5c13c00-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "e5a61e94-3986-11eb-adc1-0242ac120002",
+            "role": "Manager"
+        },
+        {
+            "timeslot": "e912d144-38c3-11eb-adc1-0242ac120002",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "e5a61e94-3986-11eb-adc1-0242ac120002",
+            "role": "Manager"
+        },
+        
     ],
-    "availResponses": [
+    "roles": [
         {
-            "id": 2,
-            "firstName": "Mycroft",
-            "lastName": "Holmes",
-            "email": "myhomles@gmail.com",
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "role": "Manager",
+        },
+        {
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
             "role": "Participant",
-            "timeslots": ["9:30AM", "10:00AM", "10:30AM"],
-            "scheduleId": 1
+        },
+    ],
+    "timeslots": [
+        {
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "ts_id": "e912d144-38c3-11eb-adc1-0242ac120002",
+            "timeslot": "10:00 AM",
+            "day": "Monday"
         },
         {
-            "id": 3,
-            "firstName": "Greg",
-            "lastName": "Lestrade",
-            "email": "greglest@gmail.com",
-            "role": "Participant",
-            "timeslots": ["9:30AM", "10:00AM", "10:30AM"],
-            "scheduleId": 1
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "ts_id": "f5c13c00-38c3-11eb-adc1-0242ac120002",
+            "timeslot": "11:00 AM",
+            "day": "Monday"
         },
         {
-            "id": 4,
-            "firstName": "James",
-            "lastName": "Moriarty",
-            "email": "jmoriarty@gmail.com",
-            "role": "Participant",
-            "timeslots": ["9:00AM", "9:30AM",  "10:30AM"],
-            "scheduleId": 1
+            "schedule_id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "ts_id": "01135610-38c4-11eb-adc1-0242ac120002",
+            "timeslot": "10:00 AM",
+            "day": "Tuesday"
         },
-        {
-            "id": 5,
-            "firstName": "Arthur",
-            "lastName": "Conan Doyle",
-            "email": "acdoyle@gmail.com",
-            "role": "Moderator",
-            "timeslots": ["9:00AM", "9:30AM",  "10:00AM", "10:30AM"],
-            "scheduleId": 1
-        },
-    ]
+    ],
+    "complete": []
 }
 export default store

@@ -5,9 +5,13 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 class Responses extends React.Component {
     static contextType = ScheduleaseContext
     render(){
-        const availEntries = this.context.avail.filter(resp =>
-            parseInt(resp.scheduleId) === parseInt(this.props.match.params.schedId))
-        //const responses 
+        const schedId = this.props.match.params.schedId
+        const avail = this.context.avail.filter(s =>
+            s.schedule_id === schedId)
+        const peopleIds = avail.map(entry =>
+            entry.user_id)
+        const people = this.context.people.filter(user =>
+            peopleIds.some(id => id === user.id) === true)
         return(
             <div className='responses'>
                 <table>
@@ -18,7 +22,15 @@ class Responses extends React.Component {
                             <th>Role</th>
                         </tr>
                     </thead>
-                    
+                    <tbody>
+                        {people.map(resp =>
+                        <tr key={resp.id}>
+                            <td>{resp.firstName} {resp.lastName}</td>
+                            <td>{resp.email}</td>
+                            
+                        </tr>
+                        )}
+                    </tbody> 
                 </table>
             </div>
         )
@@ -27,12 +39,4 @@ class Responses extends React.Component {
 
 export default Responses
 
-/* <tbody>
-                        {responses.map(resp =>
-                        <tr key={resp.id}>
-                            <td>{resp.firstName} {resp.lastName}</td>
-                            <td>{resp.email}</td>
-                            <td>{resp.role}</td>
-                        </tr>
-                        )}
-                    </tbody> */
+// add this back in <td>{resp.role}</td>

@@ -3,7 +3,6 @@ import React from 'react'
 const ScheduleaseContext = React.createContext({
     schedules: [],
     users: [],
-    availResponses: [],
     avail: [],
     people: [],
     roles: [],
@@ -11,6 +10,7 @@ const ScheduleaseContext = React.createContext({
     completed: [],
     addSchedule: () => {},
     addAvail: () => {},
+    addCompleteSched: () => {},
     convertFloatHoursToMinutes: () => {},
     convertMinutesToFloat: () => {},
 })

@@ -3,6 +3,7 @@ import './AvailForm.css'
 import ScheduleaseContext from '../../ScheduleaseContext'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { v4 as uuidv4 } from 'uuid'
  
 class AvailForm extends React.Component {
     static contextType = ScheduleaseContext
@@ -49,55 +50,49 @@ class AvailForm extends React.Component {
         }
         else{
             let newTimeslots = this.state.timeslots.filter(t =>
-                t !== e.target.value)
+                t === e.target.value)
             this.setState({
-                timeslots: newTimeslots,
+                timeslots: newTimeslots
             })
         } 
     }
    
 
     validateAvailSubmission = () => {
-        if (this.state.firstName.touched === true && 
-            this.state.firstName.value.trim().length === 0){
+        if (this.state.firstName.value.trim().length === 0){   
             return "Enter your first name"
         }
-        else if (this.state.lastName.touched === true && 
-            this.state.lastName.value.trim().length === 0){
+        
+        else if (this.state.lastName.value.trim().length === 0){
                 return "Enter your last name"
         }
-        else if (this.state.email.touched === true && 
-            this.state.email.value.trim().length === 0){
+        else if (this.state.email.value.trim().length === 0){
                 return "Enter your email"
         }
-        else if (this.state.role.touched === true && 
-            this.state.role.value === "Select role"){
-                return "Please select a role"
-        }
-        else if (this.state.role.touched === true && 
-            this.state.role.value === "Select role"){
+        else if (this.state.role.value === "Select role"){
                 return "Please select a role"
         }
     }
 
     
-
     displayValidationMessage = () => {
         return this.validateAvailSubmission()
     }
 
     displayWarnings = schedId => {
         let message = []
-        const availsForThisSchedule = this.context.availResponses.filter(resp =>
-            resp.scheduleId === schedId)
-        const dup = availsForThisSchedule.filter(resp =>
+        const availsForThisSchedule = this.context.avail.filter(resp =>
+            resp.schedule_id === schedId)
+        /*
+            const dup = availsForThisSchedule.filter(resp =>
             resp.email.toUpperCase() === this.state.email.value.toUpperCase())
+        if (dup.length !== 0){
+            message = [...message, "An availability form with that email has already been submitted. Be advised that your current submission will override your previous one."]
+        }*/
         if (this.state.timeslots.length === 0){
             message = ["You haven't selected any timeslots. Are you sure you want to report no availability?"]
         }
-        if (dup.length !== 0){
-            message = [...message, "An availability form with that email has already been submitted. Be advised that your current submission will override your previous one."]
-        }
+        
         return message
         
     }
@@ -105,38 +100,63 @@ class AvailForm extends React.Component {
     handleSubmit = (e, callback, schedId) => {
         e.preventDefault()
         let availList = []
-        let i
-        for (i=0; i < this.state.timeslots.length; i++){
-            availList.push(
-            {
-                "role": this.state.role,
-                "timeslot": this.state.timeslots[i],
+        let i, personToAdd
+        const dupPerson = this.context.people.filter(p =>
+            p.email === this.state.email.value)
+        if (dupPerson.length === 0){
+            const newPersonId = uuidv4()
+            personToAdd = {
+                "id": newPersonId,
+                "firstName": this.state.firstName.value,
+                "lastName": this.state.lastName.value,
+                "email": this.state.email.value,
+                "timeframes": this.state.timeslots,
                 "scheduleId": schedId,
-                "personId": this.state.email,
-            
-            })
+                "account": false,
+                "username": "",
+                "password": "",
+                "schedules": []
+            }
+            for (i=0; i < this.state.timeslots.length; i++){
+                availList.push(
+                {
+                    "role": this.state.role.value,
+                    "timeslot": this.state.timeslots[i],
+                    "schedule_id": schedId,
+                    "user_id": newPersonId,
+                
+                })
+            }
+        } 
+        else {
+            for (i=0; i < this.state.timeslots.length; i++){
+                availList.push(
+                {
+                    "role": this.state.role.value,
+                    "timeslot": this.state.timeslots[i],
+                    "schedule_Id": schedId,
+                    "user_id": dupPerson.id,
+                
+                })
+            }
+            personToAdd = "none"
         }
-        const personToAdd = {
-            "id": 6, //need to add id system
-            "firstName": this.state.firstName.value,
-            "lastName": this.state.lastName.value,
-            "email": this.state.email.value,
-            "role": this.state.role.value,
-            "timeframes": this.state.timeslots,
-            "scheduleId": schedId
-        }
+        
         callback(personToAdd, availList) 
-        this.props.history.push(`/dashboard/responses/${schedId}`)
+        this.props.history.push(`/dashboard/responses/${schedId}`)// remember to change this
     }
 
     render(){
-        const schedId = parseInt(this.props.match.params.schedId)
+        const schedId = this.props.match.params.schedId
         const schedule = this.context.schedules.find(s =>
             s.id === schedId)
+        const roles = this.context.roles.filter(role => 
+            role.schedule_id = schedId)
+        const timeslots = this.context.timeslots.filter(ts =>
+            ts.schedule_id = schedId)
         return(
             <div className='avail-form'>
                 <h1>{schedule.schedule_name}</h1>
-                <h2>Submission Deadline: {schedule.deadline}</h2>
                 <form 
                     onSubmit={e => {this.handleSubmit(e, this.context.addAvail, schedId)}}>
                     <label htmlFor='participant-first-name'>First name:</label>
@@ -158,25 +178,25 @@ class AvailForm extends React.Component {
                     <select
                         onChange={e => this.updateRole(e.target.value)}>
                             <option>Select role</option>
-                        {schedule.roles.map(role =>
+                        {roles.map(role =>
                             <option
-                                key={role}>
-                                {role}
+                                key={role.role}>
+                                {role.role}
                             </option>)}
                     </select>
                     <br/>
                     <label htmlFor='Avail'>Select Available Timeframes</label>
                     <br/>
                     <ul>
-                        {schedule.timeslots.map(ts =>
-                        <li key={ts}>
+                        {timeslots.map(ts =>
+                        <li key={ts.ts_id}>
                            <input
                                 type="checkbox" 
-                                id={ts} 
-                                name={ts} 
-                                value={ts}
-                                onChange={e => this.updateTimeslots(e)}/>
-                           <label htmlFor={ts}>{ts}</label>
+                                id={ts.ts_id} 
+                                name={ts.timeslot} 
+                                value={ts.ts_id}
+                                onChange={e => this.updateTimeslots(e, ts.day)}/>
+                           <label htmlFor={ts.timeslot}>{ts.day}: {ts.timeslot}</label>
                         </li> )}
                     </ul>
                     <button 

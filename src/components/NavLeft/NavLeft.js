@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 class NavLeft extends React.Component {
     render(){
-        const schedId = parseInt(this.props.match.params.schedId)
+        const schedId = this.props.match.params.schedId
         return(
         <div className='nav-left'>
             <ul className='actions'>

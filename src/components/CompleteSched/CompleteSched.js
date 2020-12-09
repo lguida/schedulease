@@ -9,143 +9,240 @@ class CompleteSched extends React.Component {
         super(props)
         this.state = {
             roles: [],
-            roleNums: [],
-            roleDups: [],
-            timeslots: [],
-            tsTotals: [],
+            completeSched: []
         }
     }
 
     updateRoleNum = (e, role) => {
-        if (e.target.value !==""){
-            const index = this.state.roles.indexOf(role)
-            let oldList = this.state.roleNums
-            oldList[index] = parseInt(e.target.value)
-            console.log(oldList)
+        if (e.target.value !=="" && isNaN(parseInt(e.target.value)) === false){
+            let thisRole = this.state.roles.find(r =>
+                r.value === role)
+            thisRole.num = parseInt(e.target.value)
+            let shallowList = this.state.roles.filter(r =>
+                r.value !== role)
             this.setState({
-                roleNums: oldList
+                roles: [...shallowList, thisRole]
             })
         }
     }
 
     updateAllowDuplicates = (e, role) =>{
-        const index = this.state.roles.indexOf(role)
-        let dupList = this.state.roleDups
+        let thisRole = this.state.roles.find(r =>
+            r.value === role)
+        let shallowList = this.state.roles.filter(r =>
+            r.value !== role)
         if (e.target.checked){
-            dupList[index] = true
-            
+            thisRole.dups = true
         }
         else{
-           dupList[index] = false
+            thisRole.dups = false
         } 
-        console.log(dupList)
         this.setState ({
-            roleDups: dupList
+            roles: [...shallowList, thisRole]
         })
     }
 
-    createScheduleDraft = schedule => {
-        const responses = this.context.availResponses.filter(resp =>
-            resp.scheduleId = schedule.id)
-        //const roles = schedule.roles
-        let list = []
-        let i, j, id = 0
-        let tsList = []
-        for (i=0; i < schedule.timeslots.length; i++){
-            tsList.push({
-                "value": schedule.timeslots[i],
-                "responseIds": []
+    createScheduleDraft = schedId => {
+        let i, person
+        let timeslotsObj = []
+
+        const timeslots = this.context.timeslots.filter(resp =>
+            resp.schedule_id = schedId)
+        const roles = this.context.roles.filter(resp =>
+            resp.schedule_id = schedId)
+        const avail = this.context.avail.filter(a =>
+            a.schedule_id === schedId)
+        const people = this.context.people.filter(p =>
+            avail.some(a => a.user_id === p.id) === true)
+       
+        timeslots.forEach(ts => {
+            timeslotsObj.push({
+                id: ts.ts_id,
+                time: ts.timeslot,
+                day: ts.day,
+                roles: [],
+                people: []
             })
-        }
-        // for (i=0; i < schedule.timeslots.length; i++){
-        //     for (j=0; j <responses.length; j++){
-        //         if (responses[j])
-        //     }
-        // }
+        })
         
-        for (i=0; i < responses.length; i++){ //goes through responses
-            for (j=0; j <responses[i].timeslots.length; j++){ //goes through timeslots
-                list.push(
+        let fullList = []
+
+        for (i=0; i < timeslotsObj.length; i++){
+            roles.forEach(r => 
+                timeslotsObj[i].roles.push({
+                    value: r.role,
+                    num: avail.filter(a => a.timeslot === timeslotsObj[i].id &&
+                        a.role === r.role).length 
+                })
+            )
+            avail.filter(a => a.timeslot === timeslotsObj[i].id).forEach(a =>{
+                person = people.find(p => a.user_id ===p.id)
+                timeslotsObj[i].people.push({
+                    firstName: person.firstName,
+                    lastName: person.lastName,
+                    email: person.email,
+                    role: a.role
+                })
+                fullList.push(
                     {
-                        "id": id,
-                        "timeslot": responses[i].timeslots[j],
-                        "firstName": responses[i].firstName,
-                        "lastName": responses[i].lastName,
-                        "email": responses[i].email,
-                        "role": responses[i].role,
-                        "show": true, //probably default this to false
+                        day: timeslotsObj[i].day,
+                        time: timeslotsObj[i].time,
+                        name: person.firstName + " " + person.lastName,
+                        role: a.role,
                     }
                 )
-                if (responses[i].timeslots[j] === tsList[j].value){
-                    tsList[j].responseIds.push(responses[i].id)
-                }
-                
-                id += 1
-            }
+            })
         }
-        console.log(tsList)
-
-
-        list.sort((a, b) => {
-            var nameA = a.timeslot.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.timeslot.toUpperCase(); // ignore upper and lowercase
-            if (nameA > nameB) {
-              return -1;
-            }
-            if (nameA < nameB) {
-              return 1;
-            }
-          
-            // names must be equal
-            return 0;
-          });
-        return list
+        return {timeslotsObj, fullList}
     }
-    
-    componentDidMount(){
-        const schedId = parseInt(this.props.match.params.schedId)
-        const schedule = this.context.schedules.find(s =>
-            s.id === schedId)
-        let roleNums = []
-        let roleDups = []
-        for (let i=0; i< schedule.roles.length; i++){
-            roleNums.push(1)
-            roleDups.push(false)
+
+    createScheduleJSX = (draft) => {
+        let tsobj = draft.timeslotsObj
+        let peopleInRole = []
+        let numRolesPerSlot = []
+        let numSetsPerTS =[]
+
+        let i, j, x
+        let respNum, stateNum, slotsToAdd
+        let enoughPeople = []
+        let completeSched = []
+
+        for (i=0; i < tsobj.length; i++){
+            numRolesPerSlot = []
+            this.state.roles.forEach(sr => {
+                stateNum = this.state.roles.find(r => r.value === sr.value)
+                respNum = tsobj[i].people.filter(p => p.role === sr.value).length 
+                slotsToAdd = Math.floor(respNum/stateNum.num)
+                numRolesPerSlot.push(slotsToAdd)
+            })
+            if (numRolesPerSlot.length> 0){
+                numSetsPerTS.push(Math.min(...numRolesPerSlot))
+            }
+            
         }
+        if (numSetsPerTS.length> 0){
+            for (let item in tsobj){
+                for (x=0; x < numSetsPerTS[item]; x++) {
+                    this.state.roles.forEach(sr => {
+                        peopleInRole = tsobj[item].people.filter(p => p.role === sr.value)
+                        if (peopleInRole.length >= sr.num){
+                            enoughPeople = true }
+                        else {
+                            enoughPeople = false
+                        }
+                    })
+                    if (enoughPeople){
+                        this.state.roles.forEach(sr => {
+                            peopleInRole = tsobj[item].people.filter(p => p.role === sr.value)
+                            for(j=0; j < sr.num; j++){
+                                completeSched.push({
+                                    day: tsobj[item].day,
+                                    time: tsobj[item].time,
+                                    name: peopleInRole[j].firstName + " " + peopleInRole[j].lastName,
+                                    role: sr, 
+                                    peopleInSlot: draft.timeslotsObj[item].people.filter(p => p.role === sr.value),
+                                    ts_id: tsobj[item].id
+                                })
+                                tsobj[item].people = tsobj[item].people.filter(p => p.email !== peopleInRole[j].email)
+                            }
+                        })
+                    }
+                }
+            
+            } 
+        }
+
+        return completeSched
+    }
+
+    handleDropdownChange = (e, prevValue, completeSched, ts_id) =>{
+        let targetObj = completeSched.find(item => 
+            item.ts_id === ts_id && prevValue === item.name)
+        let bystanderObj = completeSched.find(item => 
+            item.ts_id === ts_id && e.target.value === item.name)
+
+        let targetIndex = completeSched.indexOf(targetObj)
+        let bystanderIndex = completeSched.indexOf(bystanderObj)
+        if (bystanderObj.length === 0){
+            completeSched[targetIndex] = {
+                day: targetObj.day,
+                name: e.target.value,
+                peopleInSlot: targetObj.peopleInSlot,
+                time: targetObj.time,
+                ts_id: targetObj.ts_id
+            }
+        }
+        else {
+            completeSched[targetIndex] = bystanderObj
+            completeSched[bystanderIndex] = targetObj
+        }
+
         this.setState({
-            roles: schedule.roles,
-            roleNums: roleNums,
-            roleDups: roleDups,
-            //timeslots: schedule.timeslots
+            completeSched: completeSched
+        })
+    }
+
+    handleFinalizeClick = (e, callback, completeSched) => {
+        e.preventDefault()
+        const schedToSend = completeSched.map(entry => {
+            return {
+                schedule_id: this.props.match.params.schedId,
+                name: entry.name,
+                role: entry.role.value,
+                ts_id: entry.ts_id
+            }
+        })
+        callback(schedToSend)
+    }
+
+    componentDidMount() {
+        const roles = this.context.roles.filter(resp =>
+            resp.schedule_id = this.props.match.params.schedId)
+        let rolesObj = []
+        roles.forEach(r =>
+            rolesObj.push({
+                value: r.role,
+                num: 1,
+                dups: false
+            }))
+        this.setState({
+            roles: [...rolesObj]
         })
     }
 
     render(){
-        const schedId = parseInt(this.props.match.params.schedId)
-        const schedule = this.context.schedules.find(s =>
-            s.id === schedId)
-        const draft = this.createScheduleDraft(schedule)
+        const schedId = this.props.match.params.schedId
+        const draft = this.createScheduleDraft(schedId)
+        let completeSched
+        if (this.state.completeSched.length === 0){
+            completeSched = this.createScheduleJSX(draft)
+        }
+        else{
+            completeSched = this.state.completeSched
+        }
+        
+        console.log(completeSched)
         return(
             <div className='complete-schedule'>
                 <div className="controls">
                     <p>How many people from each role do you want in one timeslot? Do you want people from one role to be on the schedule more than once?</p>
                     <ul>
-                        {schedule.roles.map(role =>
-                            <li key={role}>
-                                <label htmlFor={role}>{role}</label>
+                    {draft.timeslotsObj[0].roles.map(role =>
+                            <li key={role.value}>
+                                <label htmlFor={role.value}>{role.value}</label>
                                 <input 
                                     className="num-roles" 
-                                    name={role} 
+                                    name={role.value} 
                                     type="text" 
                                     defaultValue={1}
-                                    onChange={e => this.updateRoleNum(e, role)}></input>
+                                    onChange={e => this.updateRoleNum(e, role.value)}></input>
                                 <label htmlFor="allow-duplicates">
                                     Allow duplicates
                                 </label>
                                 <input 
                                     name="allow-duplicates" 
                                     type="checkbox"
-                                    onChange={e => this.updateAllowDuplicates(e, role)}>
+                                    onChange={e => this.updateAllowDuplicates(e, role.value)}>
                                 </input>
                                 <button>Apply</button>
                             </li>
@@ -155,26 +252,39 @@ class CompleteSched extends React.Component {
                 <table>
                     <thead>
                         <tr>
+                            <th>Day</th>
                             <th>Time</th>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Role</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {draft.map(entry =>
-                            <tr key={entry.id}>
-                                <td>{entry.timeslot}</td>
-                                <td>{entry.firstName}{entry.lastName}</td>
-                                <td>{entry.email}</td>
-                                <td>{entry.role}</td>
-                            </tr> 
-                        )}
+                    {completeSched.map(entry =>
+                        <tr>
+                            <td>{entry.day}</td>
+                            <td>{entry.time}</td>
+                            <td><select
+                                defaultValue={entry.name}
+                                onChange={e => this.handleDropdownChange(e, entry.name, completeSched, entry.ts_id)}>
+                                {entry.peopleInSlot.map(p =>
+                                    <option>{p.firstName + " " + p.lastName}</option>
+                                )} 
+                            </select></td>
+                            <td>{entry.role.value}</td>
+                        </tr> )}
+
                     </tbody>
-                </table>   
+                </table>
+                <button
+                    onClick={e => this.handleFinalizeClick(e, this.context.addCompleteSched, completeSched)}>
+                    Finalize for Sharing/Save Changes
+                </button>   
             </div>
         )
     }
 }
 
 export default CompleteSched
+
+//fix issue with rolesInSlot where the second slot only has the second perosn in the dropdwon
+//allowduplicates?

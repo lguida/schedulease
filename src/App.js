@@ -17,30 +17,44 @@ import CompleteSharing from './components/CompleteSharing/CompleteSharing'
 import AvailFrom from './components/AvailForm/AvailForm'
 import store from './store'
 import ScheduleaseContext from './ScheduleaseContext'
-import { relativeTimeThreshold } from 'moment';
 
 class App extends React.Component {
   state = {
     schedules: store.schedules,
     users: store.users,
-    availResponses: store.availResponses,
     avail: store.avail,
     people: store.people,
-    roles: [],
-    timeslots: [],
-    completed: [],
+    roles: store.roles,
+    timeslots: store.timeslots,
+    completed: store.complete,
   }
 
-  addSchedule = schedule => {
+  addSchedule = (schedule, roles, timeslots) => {
     this.setState({
-      schedules: [...this.state.schedules, schedule]
+      schedules: [...this.state.schedules, schedule],
+      roles: [...this.state.roles, ...roles],
+      timeslots: [...this.state.timeslots, ...timeslots]
     })
   }
 
   addAvail = (person, avail) => {
+    if (person === "none"){
+      this.setState({
+        avail: [...this.state.avail, ...avail],
+      })
+    }
+    else{
+      this.setState({
+        avail: [...this.state.avail, ...avail],
+        people: [...this.state.people, person],
+      })
+    }
+  }
+  
+  //may need to add something for updating
+  addCompleteSched = (completeSched) => {
     this.setState({
-      avail: [...this.state.avail, avail],
-      people: [...this.state.people, person],
+      complete: [...this.state.completed, ...completeSched]
     })
   }
 
@@ -87,7 +101,6 @@ class App extends React.Component {
     const contextValue = {
       schedules: this.state.schedules,
       user: this.state.users,
-      availResponses: this.state.availResponses,
       avail: this.state.avail,
       people: this.state.people,
       roles: this.state.roles,
@@ -95,6 +108,7 @@ class App extends React.Component {
       completed: this.state.completed,
       addSchedule: this.addSchedule,
       addAvail: this.addAvail,
+      addCompleteSched: this.addCompleteSched,
       convertFloatHoursToMinutes: this.convertFloatHoursToMinutes,
       convertMinutesToFloat: this.convertMinutesToFloat,
     }

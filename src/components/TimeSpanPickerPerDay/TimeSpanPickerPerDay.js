@@ -2,6 +2,7 @@ import React from 'react'
 import './TimeSpanPickerPerDay.css'
 import PropTypes from 'prop-types'
 import ScheduleaseContext from '../../ScheduleaseContext'
+import { v4 as uuidv4 } from 'uuid'
 
 class TimeSpanPickerPerDay extends React.Component {
     static contextType = ScheduleaseContext
@@ -11,10 +12,10 @@ class TimeSpanPickerPerDay extends React.Component {
         return (
             times.map(time =>
                 <>
-                <option value={time}>{time}:00</option>
-                <option value={(time + .25)}>{time}:15</option>
-                <option value={(time + .5)}>{time}:30</option>
-                <option value={(time + .75)}>{time}:45</option>
+                <option key={uuidv4()} value={time}>{time}:00</option>
+                <option key={uuidv4()} value={(time + .25)}>{time}:15</option>
+                <option key={uuidv4()} value={(time + .5)}>{time}:30</option>
+                <option key={uuidv4()} value={(time + .75)}>{time}:45</option>
                 </>
             )
         )

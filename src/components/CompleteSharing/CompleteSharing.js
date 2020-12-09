@@ -1,8 +1,11 @@
 import React from 'react'
 import './CompleteSharing.css'
+import ScheduleaseContext from '../../ScheduleaseContext'
+
 
 
 class CompleteSharing extends React.Component {
+    static contextType = ScheduleaseContext
     render(){
         return(
             <div className='complete-schedule'>

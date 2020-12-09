@@ -5,6 +5,22 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 
 class NewTimeslot extends React.Component {
     static contextType = ScheduleaseContext
+    constructor(props){
+        super(props)
+        this.state = {
+            weekdayAllChecked: false,
+            weekendAllCheckd: false,
+            boxes: {
+                Monday: [],
+                Tuesday: [],
+                Wednesday: [],
+                Thursday: [],
+                Friday: [],
+                Saturday: [],
+                Sunday: [],
+            }
+        }
+    }
 
     updateTimeslots = (e, day) => {
         const pairToSend = {time: e.target.value, day: day}
@@ -16,16 +32,39 @@ class NewTimeslot extends React.Component {
         } 
     }
 
-    selectAll = (e) => {
-
+    checkedOrNo = () => {
+        
     }
 
-    selectAllWeekends = e => {
+    selectAll = (e, timeslots) => {
+        const weekdays = {
+            Monday: timeslots.Monday, 
+            Tuesday: timeslots.Tuesday, 
+            Wednesday: timeslots.Wednesday, 
+            Thursday: timeslots.Thursday, 
+            Friday: timeslots.Friday,}
+        const weekendSlots = this.props.timeslotsState.filter(slot =>
+            slot.day === "Saturday" || slot.day=== "Sunday")
+        
+    }
 
+    selectAllWeekends = (e, timeslots) => {
+        const weekends = {
+            Saturday: timeslots.Saturday, 
+            Sunday: timeslots.Sunday, }
     }
 
     createTimeslots = () => {
         let timeslots = {
+            Monday: [],
+            Tuesday: [],
+            Wednesday: [],
+            Thursday: [],
+            Friday: [],
+            Saturday: [],
+            Sunday: [],
+        }
+        let checked = {
             Monday: [],
             Tuesday: [],
             Wednesday: [],
@@ -82,21 +121,26 @@ class NewTimeslot extends React.Component {
                     }
                 }
                 timeslots[day.value].push(toAdd)
+                checked[day.value].push({value: toAdd, checked: ""})
                 timeCounter = timeCounter + duration
             }
         })
         
+        
+        
         return timeslots
     }
 
+
     render(){
         const timeslots = this.createTimeslots()
+
         return(
             <div name='Avail'>
                 <input 
                 type="checkbox" 
                 name="select-all"
-                onChange={e => this.selectAll(e)}/>
+                onChange={e => this.selectAll(e, timeslots)}/>
                 <label htmlFor="select-all">Select All</label>
                 <table>
                     <thead>
@@ -155,6 +199,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Thursday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked=""
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Thursday")}/>
@@ -181,7 +226,7 @@ class NewTimeslot extends React.Component {
                 <input 
                 type="checkbox" 
                 name="select-all-weekends"
-                onChange={e => this.selectAllWeekends(e)}/>
+                onChange={e => this.selectAllWeekends(e, timeslots)}/>
                 <label htmlFor="select-all-weekends">Select All (weekends)</label>
                 <table>
                     <thead>
