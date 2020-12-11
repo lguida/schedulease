@@ -26,7 +26,7 @@ class App extends React.Component {
     people: store.people,
     roles: store.roles,
     timeslots: store.timeslots,
-    completed: store.complete,
+    complete: store.complete,
   }
 
   addSchedule = (schedule, roles, timeslots) => {
@@ -54,8 +54,23 @@ class App extends React.Component {
   //may need to add something for updating
   addCompleteSched = (completeSched) => {
     this.setState({
-      complete: [...this.state.completed, ...completeSched]
+      complete: [...this.state.complete, ...completeSched]
     })
+  }
+
+  addNewUser = (newUser, edit) => {
+    if (edit === "update"){
+      const newPeopleList = this.state.people.filter(entry => entry.email !== newUser.email)
+      console.log(newPeopleList)
+      this.setState({
+        people: [...newPeopleList, newUser]
+      })
+    }
+    else if (edit === "add"){
+      this.setState({
+        people: [...this.state.people, newUser]
+      })
+    }
   }
 
   convertFloatHoursToMinutes = (toConvert) => {
@@ -105,45 +120,46 @@ class App extends React.Component {
       people: this.state.people,
       roles: this.state.roles,
       timeslots: this.state.timeslots,
-      completed: this.state.completed,
+      complete: this.state.complete,
       addSchedule: this.addSchedule,
       addAvail: this.addAvail,
       addCompleteSched: this.addCompleteSched,
+      addNewUser: this.addNewUser,
       convertFloatHoursToMinutes: this.convertFloatHoursToMinutes,
       convertMinutesToFloat: this.convertMinutesToFloat,
     }
     return (
-      <>
-      <header>
-        <Route path ='/dashboard' component={NavTop} />
-      </header>
-      <main className='App'>
       <ScheduleaseContext.Provider value={contextValue}>
-        <Route exact path='/' component={Landing}/>
-        <Route exact path='/login' component={LoginPage}/>
-        <Route exact path='/new-user' component={NewUser}/>
+        <header>
+          <Route path ='/dashboard/:option/:userId' component={NavTop} />
+        </header>
+        <main className='App'>
+        
+          <Route exact path='/' component={Landing}/>
+          <Route exact path='/login' component={LoginPage}/>
+          <Route exact path='/new-user' component={NewUser}/>
 
-        <Route path='/complete-schedule' component={CompleteSharing}/>
-        <Route path='/avail-form/:schedId' component={AvailFrom}/>
+          <Route path='/complete-schedule/:schedId' component={CompleteSharing}/>
+          <Route path='/avail-form/:schedId' component={AvailFrom}/>
 
-        <div className='group'>
-          <Route path ='/dashboard/schedule-settings/:schedId' component={NavLeft} />
-          <Route exact path='/dashboard/schedule-settings/:schedId' component={SchedSet}/>
+          <div className='group'>
+            <Route path ='/dashboard/schedule-settings/:schedId' component={NavLeft} />
+            <Route exact path='/dashboard/schedule-settings/:schedId' component={SchedSet}/>
 
-          <Route path ='/dashboard/completed-schedule/:schedId' component={NavLeft} />
-          <Route exact path='/dashboard/completed-schedule/:schedId' component={CompleteSched}/>
-          
-          <Route path ='/dashboard/responses/:schedId' component={NavLeft} />
-          <Route exact path='/dashboard/responses/:schedId' component={Responses}/>
-        </div>
-        <Route path='/dashboard/new-schedule' component={NewSched} />
-        <Route path='/dashboard/schedule-list' component={SchedList} />
-        <Route path='/dashboard/home' component={Home} />
-        <Route path='/dashboard/profile' component={Profile} />
+            <Route path ='/dashboard/completed-schedule/:schedId' component={NavLeft} />
+            <Route exact path='/dashboard/completed-schedule/:schedId' component={CompleteSched}/>
+            
+            <Route path ='/dashboard/responses/:schedId' component={NavLeft} />
+            <Route exact path='/dashboard/responses/:schedId' component={Responses}/>
+          </div>
+          <Route path='/dashboard/new-schedule/:userId' component={NewSched} />
+          <Route path='/dashboard/schedule-list/:userId' component={SchedList} />
+          <Route path='/dashboard/home/:userId' component={Home} />
+          <Route path='/dashboard/profile/:userId' component={Profile} />
 
+        
+        </main>
       </ScheduleaseContext.Provider>
-      </main>
-      </>
     );
   }
 }

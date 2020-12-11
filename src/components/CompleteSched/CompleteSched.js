@@ -220,8 +220,7 @@ class CompleteSched extends React.Component {
         else{
             completeSched = this.state.completeSched
         }
-        
-        console.log(completeSched)
+
         return(
             <div className='complete-schedule'>
                 <div className="controls">

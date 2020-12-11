@@ -2,6 +2,7 @@ const store =  {
     "schedules": [
         {
             "id": "74a0636e-38c1-11eb-adc1-0242ac120002",
+            "user_id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
             "schedule_name": "My First Schedule",
             "status": "open",
             "responses": 5,
@@ -11,6 +12,7 @@ const store =  {
         },
         {
             "id": "67b73060-38c1-11eb-adc1-0242ac120002",
+            "user_id": "27ed36b6-38c4-11eb-adc1-0242ac120002",
             "schedule_name": "End of year meetings",
             "status": "open",
             "responses": 3,
@@ -28,7 +30,6 @@ const store =  {
             "lastName": "Guida",
             "username": "lguida",
             "password": "lucypass1200",
-            "schedules": ["74a0636e-38c1-11eb-adc1-0242ac120002", "67b73060-38c1-11eb-adc1-0242ac120002"]
         },
         {
             "id": "46efe446-38c4-11eb-adc1-0242ac120002",
@@ -38,7 +39,6 @@ const store =  {
             "lastName": "Holmes",
             "username": "",
             "password": "",
-            "schedules": []
         },
         {
             "id": "3875b5dc-3985-11eb-adc1-0242ac120002",
@@ -48,7 +48,6 @@ const store =  {
             "lastName": "Holmes",
             "username": "",
             "password": "",
-            "schedules": []
         },
         {
             "id": "e5a61e94-3986-11eb-adc1-0242ac120002",
@@ -58,7 +57,6 @@ const store =  {
             "lastName": "Lestrade",
             "username": "",
             "password": "",
-            "schedules": []
         }
 
 

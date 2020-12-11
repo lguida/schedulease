@@ -6,6 +6,7 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 class SchedList extends React.Component {
     static contextType = ScheduleaseContext
     render(){
+        const userSchedules = this.context.schedules.filter(s => s.user_id === this.props.match.params.userId)
         return(
             <div className='schedule-list'>
                 <table>
@@ -13,23 +14,20 @@ class SchedList extends React.Component {
                         <tr>
                             <th>ScheduleName</th>
                             <th>Status</th>
-                            <th>Deadline</th>
                             <th>Responses</th>
-                            <th>Actions</th>
+                            <th>Meeting Duration</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.context.schedules.map(sched =>
+                        {userSchedules.map(sched =>
                             <tr key={sched.id}>
-                                <td>{sched.schedule_name}</td>
-                                <td>{sched.status}</td>
-                                <td>{sched.deadline}</td>
-                                <td>filler</td>
                                 <td><Link 
                                     className='indiv-schedule-link' 
                                     to={`/dashboard/schedule-settings/${sched.id}`}>
-                                    View</Link>
-                                </td>
+                                    {sched.schedule_name}</Link></td>
+                                <td>{sched.status}</td>
+                                <td>{sched.responses}</td>
+                                <td>{sched.meeting_duration}</td>
                             </tr>)}
                     </tbody>
                 </table>
