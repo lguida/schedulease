@@ -97,7 +97,7 @@ class CompleteSched extends React.Component {
     }
 
     createScheduleJSX = (draft) => {
-        let tsobj = draft.timeslotsObj
+        let tsobj = JSON.parse(JSON.stringify(draft.timeslotsObj))
         let peopleInRole = []
         let numRolesPerSlot = []
         let numSetsPerTS =[]
@@ -144,6 +144,7 @@ class CompleteSched extends React.Component {
                                     ts_id: tsobj[item].id
                                 })
                                 tsobj[item].people = tsobj[item].people.filter(p => p.email !== peopleInRole[j].email)
+                                console.log(draft.timeslotsObj[item].people)
                             }
                         })
                     }
@@ -243,7 +244,7 @@ class CompleteSched extends React.Component {
                                     type="checkbox"
                                     onChange={e => this.updateAllowDuplicates(e, role.value)}>
                                 </input>
-                                <button>Apply</button>
+
                             </li>
                         )}
                     </ul>

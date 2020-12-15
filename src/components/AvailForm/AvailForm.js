@@ -20,7 +20,7 @@ class AvailForm extends React.Component {
                 value: '',
                 touched: false },
             role: {
-                value: '',
+                value: 'Select role',
                 touched: false},
             timeslots: []
         }
@@ -58,52 +58,122 @@ class AvailForm extends React.Component {
     }
    
 
-    validateAvailSubmission = () => {
-        if (this.state.firstName.value.trim().length === 0){   
+    validateFirstName = () => {
+        if (this.state.firstName.value.trim().length === 0){
             return "Enter your first name"
         }
-        
-        else if (this.state.lastName.value.trim().length === 0){
-                return "Enter your last name"
+    }
+
+    displayFirstNameWarning = () => {
+        const message = this.validateFirstName()
+        if (message && this.state.firstName.touched === true){
+            return "warning"
         }
-        else if (this.state.email.value.trim().length === 0){
-                return "Enter your email"
-        }
-        else if (this.state.role.value === "Select role"){
-                return "Please select a role"
+        else{
+            return "hidden"
         }
     }
 
-    
-    displayValidationMessage = () => {
-        return this.validateAvailSubmission()
+    validateLastName = () => {
+        if (this.state.lastName.value.trim().length === 0){
+            return "Enter your last name"
+        }
     }
 
-    displayWarnings = schedId => {
-        let message = []
-        const availsForThisSchedule = this.context.avail.filter(resp =>
-            resp.schedule_id === schedId)
-        /*
-            const dup = availsForThisSchedule.filter(resp =>
-            resp.email.toUpperCase() === this.state.email.value.toUpperCase())
-        if (dup.length !== 0){
-            message = [...message, "An availability form with that email has already been submitted. Be advised that your current submission will override your previous one."]
-        }*/
+    displayLastNameWarning = () => {
+        const message = this.validateLastName()
+        if (message && this.state.lastName.touched === true){
+            return "warning"
+        }
+        else{
+            return "hidden"
+        }
+    }
+
+    validateEmail = () => {
+        if (this.state.email.value.trim().length === 0){
+            return "Enter your email"
+        }
+    }
+
+    displayEmailWarning = () => {
+        const message = this.validateEmail()
+        if (message && this.state.email.touched === true){
+            return "warning"
+        }
+        else{
+            return "hidden"
+        }
+    }
+
+    validateRole = () => {
+        if (this.state.role.value === "Select role"){
+            return "Select a role"
+        }
+    }
+
+    displayRoleWarning = () => {
+        const message = this.validateRole()
+        if (message && this.state.role.touched === true){
+            return "warning"
+        }
+        else{
+            return "hidden"
+        }
+    }
+
+    validateTimeslots = () => {
+        const emailDup = this.context.people.find(p => p.email === this.state.email.value)
+        let repeatEntry = false
+        if (emailDup) {
+            repeatEntry = this.context.avail.some(a => 
+                a.schedule_id === this.props.match.params.schedId &&
+                a.user_id === emailDup.id)
+        }
+        if (repeatEntry){
+            return "You have already submitted availablity for this schedule. If you choose to submit again, your old responses will be overridden."
+        }
+    }
+
+
+    displayTimeslotsWarning = () => {
+        const message = this.validateTimeslots()
+        if (message){
+            return "warning"
+        }
+        else{
+            return "hidden"
+        }
+    }
+
+    popupBeforeSubmit = (e, callback, schedId) => {
+        e.preventDefault()
         if (this.state.timeslots.length === 0){
-            message = ["You haven't selected any timeslots. Are you sure you want to report no availability?"]
+            if (window.confirm("You haven't selected any timeslots. Are you sure you want to report no availability?")){
+                this.handleSubmit(e, callback, schedId)
+            }
         }
-        
-        return message
-        
+        else{
+            this.handleSubmit(e, callback, schedId)
+        }
     }
+
 
     handleSubmit = (e, callback, schedId) => {
         e.preventDefault()
         let availList = []
-        let i, personToAdd
-        const dupPerson = this.context.people.filter(p =>
+        let i, personToAdd, otherAvail, thisAvail
+        let previousAvail = []
+        const dupPerson = this.context.people.find(p =>
             p.email === this.state.email.value)
-        if (dupPerson.length === 0){
+        if (dupPerson !== undefined){
+            previousAvail = this.context.avail.filter(a => 
+                a.schedule_id === this.props.match.params.schedId &&
+                a.user_id === dupPerson.id)
+        }
+        let schedule = this.context.schedules.find(s =>
+            s.id === this.props.match.params.schedId)
+        if (dupPerson === undefined){
             const newPersonId = uuidv4()
             personToAdd = {
                 "id": newPersonId,
@@ -127,8 +197,22 @@ class AvailForm extends React.Component {
                 
                 })
             }
-        } 
+            schedule["responses"] =  schedule["responses"] + 1
+        }
         else {
+            if (previousAvail.length !== 0){
+                personToAdd = "update"
+                otherAvail = this.context.avail.filter(a => 
+                    a.schedule_id !== this.props.match.params.schedId)
+                thisAvail = this.context.avail.filter(a => 
+                    a.schedule_id === this.props.match.params.schedId)
+                thisAvail = thisAvail.filter(a => a.user_id !== dupPerson.id)
+                availList = [...otherAvail, ...thisAvail]
+            }
+            else{
+                personToAdd = "none"
+                schedule["responses"] =  schedule["responses"] + 1
+            }
             for (i=0; i < this.state.timeslots.length; i++){
                 availList.push(
                 {
@@ -139,11 +223,12 @@ class AvailForm extends React.Component {
                 
                 })
             }
-            personToAdd = "none"
+            
+            
         }
         
-        callback(personToAdd, availList) 
-        this.props.history.push(`/dashboard/responses/${schedId}`)// remember to change this
+        callback(personToAdd, availList, schedule) 
+        this.props.history.push(`/submitted`)
     }
 
     render(){
@@ -158,21 +243,24 @@ class AvailForm extends React.Component {
             <div className='avail-form'>
                 <h1>{schedule.schedule_name}</h1>
                 <form 
-                    onSubmit={e => {this.handleSubmit(e, this.context.addAvail, schedId)}}>
+                    onSubmit={e => {this.popupBeforeSubmit(e, this.context.addAvail, schedId)}}>
                     <label htmlFor='participant-first-name'>First name:</label>
                     <input 
                         name='participant-first-name'
                         onChange={e => this.updateFirstName(e.target.value)}/>
+                    <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span> 
                     <br/>
                     <label htmlFor='participant-last-name'>Last name:</label>
                     <input 
                         name='participant-last-name'
                         onChange={e => this.updateLastName(e.target.value)}/>
+                    <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span> 
                     <br/>
                     <label htmlFor='participant-email'>Email Address:</label>
                     <input 
                         name='participant-email'
                         onChange={e => this.updateEmail(e.target.value)}/>
+                    <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
                     <br/>
                     <label htmlFor='role-select'>Role:</label>
                     <select
@@ -184,6 +272,7 @@ class AvailForm extends React.Component {
                                 {role.role}
                             </option>)}
                     </select>
+                    <span className={this.displayRoleWarning()}>{this.validateRole()}</span> 
                     <br/>
                     <label htmlFor='Avail'>Select Available Timeframes</label>
                     <br/>
@@ -199,14 +288,18 @@ class AvailForm extends React.Component {
                            <label htmlFor={ts.timeslot}>{ts.day}: {ts.timeslot}</label>
                         </li> )}
                     </ul>
+                    <span className={this.displayTimeslotsWarning()}>{this.validateTimeslots()}</span> 
+                    <br />
                     <button 
                         type='submit'
-                        disabled={this.validateAvailSubmission()}>
+                        disabled={
+                            this.validateFirstName() ||
+                            this.validateLastName() ||
+                            this.validateEmail() ||
+                            this.validateRole()}>
                         Submit Availability
                     </button>
                     <br/>
-                    <span className="warning">{this.displayValidationMessage()}</span>
-                    <span className="warning">{this.displayWarnings(schedId)}</span>
                 </form>
             </div>
         )
@@ -218,7 +311,3 @@ export default withRouter(AvailForm)
 AvailForm.propTypes = {
     history: PropTypes.object.isRequired
 }
-
-//TODO: figure out how to make the warnings appear
-//also, make sure that duplicate email addresses DO override the old submission
-//make a page to direct to that says their submission was successfully recorded

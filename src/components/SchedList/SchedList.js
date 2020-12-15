@@ -6,7 +6,8 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 class SchedList extends React.Component {
     static contextType = ScheduleaseContext
     render(){
-        const userSchedules = this.context.schedules.filter(s => s.user_id === this.props.match.params.userId)
+        const userSchedules = this.context.schedules.filter(s => 
+            s.user_id === this.props.match.params.userId)
         return(
             <div className='schedule-list'>
                 <table>

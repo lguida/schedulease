@@ -11,9 +11,9 @@ class SchedSet extends React.Component {
         const schedule = this.context.schedules.find(s =>
             s.id === schedId)
         const roles = this.context.roles.filter(role => 
-            role.schedule_id = schedId)
+            role.schedule_id === schedId)
         const timeslots = this.context.timeslots.filter(ts =>
-            ts.schedule_id = schedId)
+            ts.schedule_id === schedId)
         return(
             <div className='schedule-settings'>
                 <span htmlFor='sched-name'>Schedule name: {schedule.schedule_name} </span>
@@ -41,4 +41,3 @@ class SchedSet extends React.Component {
 
 export default SchedSet
 
-//implement an Edit schedule button

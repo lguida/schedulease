@@ -2,7 +2,6 @@ import React from 'react'
 
 const ScheduleaseContext = React.createContext({
     schedules: [],
-    users: [],
     avail: [],
     people: [],
     roles: [],

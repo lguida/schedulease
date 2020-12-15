@@ -15,13 +15,14 @@ import Landing from './components/Landing/Landing'
 import NewUser from './components/NewUser/NewUser'
 import CompleteSharing from './components/CompleteSharing/CompleteSharing'
 import AvailFrom from './components/AvailForm/AvailForm'
+import Submitted from './components/Submitted/Submitted'
+import ErrorBound from './components/ErrorBound/ErrorBound'
 import store from './store'
 import ScheduleaseContext from './ScheduleaseContext'
 
 class App extends React.Component {
   state = {
     schedules: store.schedules,
-    users: store.users,
     avail: store.avail,
     people: store.people,
     roles: store.roles,
@@ -37,16 +38,23 @@ class App extends React.Component {
     })
   }
 
-  addAvail = (person, avail) => {
+  addAvail = (person, avail, schedule) => {
     if (person === "none"){
       this.setState({
         avail: [...this.state.avail, ...avail],
+        schedules: [...this.state.schedules.filter(s => s.id !== schedule.id), schedule]
+      })
+    }
+    else if (person === "update"){
+      this.setState({
+        avail: [...avail]
       })
     }
     else{
       this.setState({
         avail: [...this.state.avail, ...avail],
         people: [...this.state.people, person],
+        schedules: [...this.state.schedules.filter(s => s.id !== schedule.id), schedule]
       })
     }
   }
@@ -115,7 +123,6 @@ class App extends React.Component {
   render(){
     const contextValue = {
       schedules: this.state.schedules,
-      user: this.state.users,
       avail: this.state.avail,
       people: this.state.people,
       roles: this.state.roles,
@@ -131,31 +138,77 @@ class App extends React.Component {
     return (
       <ScheduleaseContext.Provider value={contextValue}>
         <header>
+        <ErrorBound>
           <Route path ='/dashboard/:option/:userId' component={NavTop} />
+        </ErrorBound>
         </header>
         <main className='App'>
-        
-          <Route exact path='/' component={Landing}/>
-          <Route exact path='/login' component={LoginPage}/>
-          <Route exact path='/new-user' component={NewUser}/>
+          <ErrorBound>
+            <Route exact path='/' component={Landing}/>
+          </ErrorBound>
 
-          <Route path='/complete-schedule/:schedId' component={CompleteSharing}/>
-          <Route path='/avail-form/:schedId' component={AvailFrom}/>
+          <ErrorBound>
+          <Route exact path='/login' component={LoginPage}/>
+            </ErrorBound>
+
+          <ErrorBound>
+            <Route exact path='/new-user' component={NewUser}/>
+          </ErrorBound>
+          
+          <ErrorBound>
+            <Route path='/complete-schedule/:schedId' component={CompleteSharing}/>
+          </ErrorBound>
+
+          <ErrorBound>
+            <Route path='/avail-form/:schedId' component={AvailFrom}/>
+          </ErrorBound>
 
           <div className='group'>
-            <Route path ='/dashboard/schedule-settings/:schedId' component={NavLeft} />
-            <Route exact path='/dashboard/schedule-settings/:schedId' component={SchedSet}/>
+            <ErrorBound>
+              <Route path ='/dashboard/schedule-settings/:schedId' component={NavLeft} />
+            </ErrorBound>
+              
+            <ErrorBound>
+              <Route exact path='/dashboard/schedule-settings/:schedId' component={SchedSet}/>
+            </ErrorBound>
 
-            <Route path ='/dashboard/completed-schedule/:schedId' component={NavLeft} />
-            <Route exact path='/dashboard/completed-schedule/:schedId' component={CompleteSched}/>
-            
-            <Route path ='/dashboard/responses/:schedId' component={NavLeft} />
-            <Route exact path='/dashboard/responses/:schedId' component={Responses}/>
+
+            <ErrorBound>
+              <Route path ='/dashboard/completed-schedule/:schedId' component={NavLeft} />
+            </ErrorBound>
+
+            <ErrorBound>
+              <Route exact path='/dashboard/completed-schedule/:schedId' component={CompleteSched}/>
+            </ErrorBound>
+
+            <ErrorBound>
+              <Route path ='/dashboard/responses/:schedId' component={NavLeft} />
+            </ErrorBound>
+
+            <ErrorBound>
+              <Route exact path='/dashboard/responses/:schedId' component={Responses}/>
+            </ErrorBound>
           </div>
-          <Route path='/dashboard/new-schedule/:userId' component={NewSched} />
-          <Route path='/dashboard/schedule-list/:userId' component={SchedList} />
-          <Route path='/dashboard/home/:userId' component={Home} />
-          <Route path='/dashboard/profile/:userId' component={Profile} />
+
+          <ErrorBound>
+            <Route path='/dashboard/new-schedule/:userId' component={NewSched} />
+          </ErrorBound>
+          
+          <ErrorBound>
+            <Route path='/dashboard/schedule-list/:userId' component={SchedList} />
+          </ErrorBound>
+
+          <ErrorBound>
+            <Route path='/dashboard/home/:userId' component={Home} />
+          </ErrorBound>
+
+          <ErrorBound>
+            <Route path='/dashboard/profile/:userId' component={Profile} />
+          </ErrorBound>
+
+          <ErrorBound>
+            <Route path= '/submitted' component={Submitted} />
+          </ErrorBound>
 
         
         </main>

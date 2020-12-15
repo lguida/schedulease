@@ -37,7 +37,7 @@ class TimeSpanPickerPerDay extends React.Component {
                 else{
                     newHour = parseInt(value)
                 }
-                const newFloat = parseFloat(value) - newHour
+                const newFloat = parseFloat(value) - parseInt(value)
                 if (newFloat === 0){
                     newMin = 0
                 }
@@ -91,7 +91,7 @@ class TimeSpanPickerPerDay extends React.Component {
                 else{
                     newHour = parseInt(value)
                 }
-                const newFloat = parseFloat(value) - newHour
+                const newFloat = parseFloat(value) - parseInt(value)
                 if (newFloat === 0){
                     newMin = 0
                 }
@@ -143,6 +143,63 @@ class TimeSpanPickerPerDay extends React.Component {
         this.props.updateTimeframe(shallowCopy)
     }
 
+    getStateValue = (startEnd, day) => {
+        const dayName = this.props.days.find(wkday =>
+            wkday.value === day)
+        const dayIndex = this.props.days.indexOf(dayName)
+        let valueToReturn
+        if (startEnd === "start"){
+            valueToReturn = this.props.days[dayIndex].start.hour
+            if (this.props.days[dayIndex].start.min === 15){
+                valueToReturn += .25
+            }
+            else if (this.props.days[dayIndex].start.min === 30){
+                valueToReturn += .50
+            }
+            else if (this.props.days[dayIndex].start.min === 45){
+                valueToReturn += .75
+            }
+        }
+        else if (startEnd === "end"){
+            valueToReturn = this.props.days[dayIndex].end.hour
+            if (this.props.days[dayIndex].end.min === 15){
+                valueToReturn += .25
+            }
+            else if (this.props.days[dayIndex].end.min === 30){
+                valueToReturn += .50
+            }
+            else if (this.props.days[dayIndex].end.min === 45){
+                valueToReturn += .75
+            }
+        }
+        if (valueToReturn > 12){
+            valueToReturn = valueToReturn - 12
+        }
+       return valueToReturn
+
+    }
+
+    validateTimeframe = (day) => {
+        const dayName = this.props.days.find(wkday =>
+            wkday.value === day)
+        const dayIndex = this.props.days.indexOf(dayName)
+        const start = this.context.convertMinutesToFloat(this.props.days[dayIndex].start.hour, this.props.days[dayIndex].start.min)
+        const end = this.context.convertMinutesToFloat(this.props.days[dayIndex].end.hour, this.props.days[dayIndex].end.min)
+        if (start >=  end){
+            return "Start time must be before end time"
+        }
+    }
+
+    displayTimeframeWarning = (day) => {
+        const message = this.validateTimeframe(day)
+        if (message){
+            return "warning"
+        }
+        else{
+            return "hidden"
+        }
+    }
+
     render(){
         const daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         const timeDropdownJSX = this.createTimeDropdownJSX()
@@ -155,6 +212,7 @@ class TimeSpanPickerPerDay extends React.Component {
                             <th>Start Time</th>
                             <th></th>
                             <th>End Time</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,7 +220,8 @@ class TimeSpanPickerPerDay extends React.Component {
                         <tr key={day}>
                             <td>{day}</td>
                             <td><select 
-                                defaultValue={9}
+                                value={this.getStateValue("start", day)}
+                                
                                 onChange={e => this.prepTimeframe("start", "Num", e.target.value, day)}>
                                     {timeDropdownJSX}
                                 </select>
@@ -175,7 +234,7 @@ class TimeSpanPickerPerDay extends React.Component {
                             </td>
                             <td>to</td>
                             <td> <select
-                                    defaultValue={5}
+                                    value={this.getStateValue("end", day)}
                                     onChange={e => this.prepTimeframe("end","Num", e.target.value, day)}>
                                     {timeDropdownJSX}
                                 </select>  
@@ -185,6 +244,9 @@ class TimeSpanPickerPerDay extends React.Component {
                                     <option>AM</option>
                                     <option>PM</option>
                                 </select>
+                            </td>
+                            <td>
+                            <span className={this.displayTimeframeWarning(day)}>{this.validateTimeframe(day)}</span> 
                             </td>
                         </tr>
                         )}

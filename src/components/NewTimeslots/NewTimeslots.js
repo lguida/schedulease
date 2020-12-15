@@ -9,16 +9,6 @@ class NewTimeslot extends React.Component {
         super(props)
         this.state = {
             weekdayAllChecked: false,
-            weekendAllCheckd: false,
-            boxes: {
-                Monday: [],
-                Tuesday: [],
-                Wednesday: [],
-                Thursday: [],
-                Friday: [],
-                Saturday: [],
-                Sunday: [],
-            }
         }
     }
 
@@ -32,26 +22,44 @@ class NewTimeslot extends React.Component {
         } 
     }
 
-    checkedOrNo = () => {
-        
-    }
-
     selectAll = (e, timeslots) => {
-        const weekdays = {
-            Monday: timeslots.Monday, 
-            Tuesday: timeslots.Tuesday, 
-            Wednesday: timeslots.Wednesday, 
-            Thursday: timeslots.Thursday, 
-            Friday: timeslots.Friday,}
-        const weekendSlots = this.props.timeslotsState.filter(slot =>
-            slot.day === "Saturday" || slot.day=== "Sunday")
+        let tsToSend = []
+        for (let day in timeslots) {
+            timeslots[day].forEach(ts => 
+                tsToSend.push({time: ts, day: day}))
+        }
+       if(e.target.checked){
+           this.setState({
+            weekdayAllChecked: true,
+           })
+
+           this.props.selectAllTimeslots(true, tsToSend)
+        }
+        else{
+            this.setState({
+                weekdayAllChecked: false,
+               })
+               this.props.selectAllTimeslots(false, tsToSend)
+        }
         
     }
 
-    selectAllWeekends = (e, timeslots) => {
-        const weekends = {
-            Saturday: timeslots.Saturday, 
-            Sunday: timeslots.Sunday, }
+    checked = (day, slot) => {
+        if (this.state.weekdayAllChecked){
+            return "checked"
+        }
+        else {
+            if (this.props.timeslotsState === undefined){
+                return ""
+            }
+            else {
+                const inTSList = this.props.timeslotsState.find(ts =>
+                    ts.day === day && ts.time === slot)
+                if (inTSList !== undefined){
+                        return "checked"
+                    } 
+            }
+        }
     }
 
     createTimeslots = () => {
@@ -125,7 +133,7 @@ class NewTimeslot extends React.Component {
                 timeCounter = timeCounter + duration
             }
         })
-        
+
         
         
         return timeslots
@@ -160,6 +168,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Monday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Monday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Monday")}/>
@@ -173,6 +182,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Tuesday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Tuesday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Tuesday")}/>
@@ -186,6 +196,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Wednesday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Wednesday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Wednesday")}/>
@@ -199,7 +210,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Thursday"}>
                                         <input 
                                         type="checkbox" 
-                                        checked=""
+                                        checked={!!this.checked("Thursday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Thursday")}/>
@@ -213,6 +224,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Friday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Friday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Friday")}/>
@@ -223,11 +235,6 @@ class NewTimeslot extends React.Component {
                         </tr>
                     </tbody>
                 </table>
-                <input 
-                type="checkbox" 
-                name="select-all-weekends"
-                onChange={e => this.selectAllWeekends(e, timeslots)}/>
-                <label htmlFor="select-all-weekends">Select All (weekends)</label>
                 <table>
                     <thead>
                         <tr>
@@ -243,6 +250,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Saturday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Saturday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Saturday")}/>
@@ -256,6 +264,7 @@ class NewTimeslot extends React.Component {
                                     <li key={slot + "Sunday"}>
                                         <input 
                                         type="checkbox" 
+                                        checked={!!this.checked("Saturday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Sunday")}/>
