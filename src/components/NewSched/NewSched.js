@@ -283,7 +283,7 @@ class NewSched extends React.Component {
 
     addMonthAndDate = (newSchedId) => {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
-        const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satruday"]
+        const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         let counter = new Date(this.state.startDate)
         let timeslotsToAdd = []
         let dayOfWeek
@@ -415,6 +415,8 @@ class NewSched extends React.Component {
                         duration={this.state.duration}
                         updateTimeslots={this.updateTimeslots}
                         selectAllTimeslots={this.selectAllTimeslots}
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
                     />
                     
                     <button 

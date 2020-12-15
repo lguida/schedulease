@@ -14,6 +14,9 @@ class NewTimeslot extends React.Component {
 
     updateTimeslots = (e, day) => {
         const pairToSend = {time: e.target.value, day: day}
+        if (this.state.weekdayAllChecked === true){
+            this.setState({weekdayAllChecked: false})
+        }
         if (e.target.checked){
             this.props.updateTimeslots(true, pairToSend)
         }
@@ -139,6 +142,31 @@ class NewTimeslot extends React.Component {
         return timeslots
     }
 
+    hideUnusedDays = day => {
+        if (this.props.startDate.length === 0 || this.props.endDate.length === 0){
+            return "visible"
+        }
+        else{
+            const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            let counter = new Date(this.props.startDate)
+            let weekDaysPresent = []
+            let dayOfWeek
+            while(counter <= new Date(this.props.endDate)){
+                dayOfWeek = weekDays[counter.getDay()]
+                weekDaysPresent.push(dayOfWeek)
+                counter.setDate(counter.getDate() +1)
+            }
+            if (weekDaysPresent.some(wkd => wkd === day)=== true){
+                
+                return "visible"
+            }
+            else{
+                return "hidden"
+            }
+            
+        }
+    }
+
 
     render(){
         const timeslots = this.createTimeslots()
@@ -153,16 +181,16 @@ class NewTimeslot extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
+                        <th className={this.hideUnusedDays("Monday")}>Monday</th>
+                        <th className={this.hideUnusedDays("Tuesday")}>Tuesday</th>
+                        <th className={this.hideUnusedDays("Wednesday")}>Wednesday</th>
+                        <th className={this.hideUnusedDays("Thursday")}>Thursday</th>
+                        <th className={this.hideUnusedDays("Friday")}>Friday</th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>
+                        <td className={this.hideUnusedDays("Monday")}>
                             <ul>
                                 {timeslots.Monday.map(slot =>
                                     <li key={slot + "Monday"}>
@@ -176,7 +204,7 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
-                        <td>
+                        <td className={this.hideUnusedDays("Tuesday")}>
                             <ul>
                                 {timeslots.Tuesday.map(slot =>
                                     <li key={slot + "Tuesday"}>
@@ -190,7 +218,7 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
-                        <td>
+                        <td className={this.hideUnusedDays("Wednesday")}>
                             <ul>
                                 {timeslots.Wednesday.map(slot =>
                                     <li key={slot + "Wednesday"}>
@@ -204,7 +232,7 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
-                        <td>
+                        <td className={this.hideUnusedDays("Thursday")}>
                             <ul>
                                 {timeslots.Thursday.map(slot =>
                                     <li key={slot + "Thursday"}>
@@ -218,7 +246,7 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
-                        <td>
+                        <td className={this.hideUnusedDays("Friday")}>
                             <ul>
                                 {timeslots.Friday.map(slot =>
                                     <li key={slot + "Friday"}>
@@ -238,13 +266,13 @@ class NewTimeslot extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                        <th>Sunday</th>
-                        <th>Saturday</th>
+                        <th className={this.hideUnusedDays("Saturday")}>Saturday</th>
+                        <th className={this.hideUnusedDays("Sunday")}>Sunday</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                        <td>
+                        <td className={this.hideUnusedDays("Saturday")}>
                             <ul>
                                 {timeslots.Saturday.map(slot =>
                                     <li key={slot + "Saturday"}>
@@ -258,13 +286,13 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
-                        <td>
+                        <td className={this.hideUnusedDays("Sunday")}>
                             <ul>
                                 {timeslots.Sunday.map(slot =>
                                     <li key={slot + "Sunday"}>
                                         <input 
                                         type="checkbox" 
-                                        checked={!!this.checked("Saturday", slot)}
+                                        checked={!!this.checked("Sunday", slot)}
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Sunday")}/>

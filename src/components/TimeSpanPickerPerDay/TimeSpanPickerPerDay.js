@@ -8,14 +8,15 @@ class TimeSpanPickerPerDay extends React.Component {
     static contextType = ScheduleaseContext
 
     createTimeDropdownJSX = () =>{
-        let times = [1,2,3,4,5,6,7,8,9,10,11,12]
+        let times = [12,1,2,3,4,5,6,7,8,9,10,11]
+        let values = [0,1,2,3,4,5,6,7,8,9,10,11]
         return (
-            times.map(time =>
+            values.map(value =>
                 <>
-                <option key={uuidv4()} value={time}>{time}:00</option>
-                <option key={uuidv4()} value={(time + .25)}>{time}:15</option>
-                <option key={uuidv4()} value={(time + .5)}>{time}:30</option>
-                <option key={uuidv4()} value={(time + .75)}>{time}:45</option>
+                <option key={uuidv4()} value={value}>{times[value]}:00</option>
+                <option key={uuidv4()} value={(value + .25)}>{times[value]}:15</option>
+                <option key={uuidv4()} value={(value + .5)}>{times[value]}:30</option>
+                <option key={uuidv4()} value={(value + .75)}>{times[value]}:45</option>
                 </>
             )
         )
