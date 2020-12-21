@@ -17,6 +17,8 @@ import CompleteSharing from './components/CompleteSharing/CompleteSharing'
 import AvailFrom from './components/AvailForm/AvailForm'
 import Submitted from './components/Submitted/Submitted'
 import ErrorBound from './components/ErrorBound/ErrorBound'
+
+import config from './config'
 import store from './store'
 import ScheduleaseContext from './ScheduleaseContext'
 
@@ -193,7 +195,7 @@ class App extends React.Component {
           <ErrorBound>
             <Route path='/dashboard/new-schedule/:userId' component={NewSched} />
           </ErrorBound>
-          
+
           <ErrorBound>
             <Route path='/dashboard/schedule-list/:userId' component={SchedList} />
           </ErrorBound>
