@@ -5,9 +5,10 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 
 class SchedList extends React.Component {
     static contextType = ScheduleaseContext
+
+
     render(){
-        const userSchedules = this.context.schedules.filter(s => 
-            s.user_id === this.props.match.params.userId)
+        const userSchedules = this.context.schedules
         return(
             <div className='schedule-list'>
                 <table>
@@ -24,7 +25,7 @@ class SchedList extends React.Component {
                             <tr key={sched.id}>
                                 <td><Link 
                                     className='indiv-schedule-link' 
-                                    to={`/dashboard/schedule-settings/${sched.id}`}>
+                                    to={`/schedule/schedule-settings/${sched.id}`}>
                                     {sched.schedule_name}</Link></td>
                                 <td>{sched.status}</td>
                                 <td>{sched.responses}</td>

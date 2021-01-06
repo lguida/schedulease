@@ -7,11 +7,23 @@ class Responses extends React.Component {
     render(){
         const schedId = this.props.match.params.schedId
         const avail = this.context.avail.filter(s =>
-            s.schedule_id === schedId)
+            s.schedule_id === parseInt(schedId))
         const peopleIds = avail.map(entry =>
-            entry.user_id)
+            entry.people_id)
         const people = this.context.people.filter(user =>
             peopleIds.some(id => id === user.id) === true)
+        let listEntries = [] 
+        let x
+        people.flatMap(person => {
+            x = avail.find(avail => avail.people_id === person.id)
+            listEntries.push({
+                "first_name": person.first_name,
+                "last_name": person.last_name,
+                "email": person.email,
+                "role_name": x.role_name 
+            })
+        })
+
         return(
             <div className='responses'>
                 <table>
@@ -23,11 +35,11 @@ class Responses extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {people.map(resp =>
+                        {listEntries.map(resp =>
                         <tr key={resp.id}>
-                            <td>{resp.firstName} {resp.lastName}</td>
+                            <td>{resp.first_name} {resp.last_name}</td>
                             <td>{resp.email}</td>
-                            
+                            <td>{resp.role_name}</td>
                         </tr>
                         )}
                     </tbody> 
@@ -38,5 +50,3 @@ class Responses extends React.Component {
 }
 
 export default Responses
-
-// add this back in <td>{resp.role}</td>

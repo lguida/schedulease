@@ -18,7 +18,6 @@ function handleResponse(response) {
             if ([401, 403].indexOf(response.status) !== -1) {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                 logout();
-                location.reload(true);
             }
 
             const error = (data && data.message) || response.statusText;
@@ -31,17 +30,17 @@ function handleResponse(response) {
 
 function login(username, password) {
     const requestOptions = {
-        method: 'POST',
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
     };
 
-    return fetch(`${config.API_ENDPOINT}/users/authenticate`, requestOptions)
+    return fetch(`${config.API_ENDPOINT}/people/auth/${username}/${password}`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUserSubject.next(user);
+
+            localStorage.setItem('currentUser', user[0].id);
+            currentUserSubject.next(user[0].id);
 
             return user;
         });
@@ -52,3 +51,5 @@ function logout() {
     localStorage.removeItem('currentUser');
     currentUserSubject.next(null);
 }
+
+export default authenticationService

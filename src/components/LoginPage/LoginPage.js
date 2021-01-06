@@ -1,13 +1,18 @@
 import React from 'react'
 import './LoginPage.css'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ScheduleaseContext from '../../ScheduleaseContext'
+import authenticationService from '../../Auth/auth-service'
  
 class LoginPage extends React.Component {
     static contextType = ScheduleaseContext
     constructor(props){
         super(props)
+
+        if (authenticationService.currentUserValue) { 
+            this.props.history.push(`/dashboard/home/${authenticationService.currentUserValue}`) 
+        }
         this.state = {
             username: '',
             password: '',
@@ -29,23 +34,14 @@ class LoginPage extends React.Component {
 
     validateUser = (e) =>{
         e.preventDefault()
-        const userRecord = this.context.people.find(p => p.username === this.state.username)
-        const emailRecord = this.context.people.find(p => p.email === this.state.username)
-        let recordToUse
-        if (userRecord === undefined){
-            recordToUse = emailRecord
-        }
-        else if (emailRecord === undefined){
-            recordToUse = userRecord
-        }
-        if (this.state.password === recordToUse.password){
-            this.props.history.push(`/dashboard/home/${recordToUse.id}`)
-        }
-        else {
-            this.setState({
-                noMatch: true
-            })
-        }
+        authenticationService.login(this.state.username, this.state.password)
+            .then(user =>
+                {this.props.history.push(`/dashboard/home/${user[0].id}`)},
+                error => {
+                    this.setState({
+                        noMatch: true
+                    })
+                })
     }
 
     displayReject = () => {
@@ -63,7 +59,7 @@ class LoginPage extends React.Component {
             <div className='login-page'>
                 <form
                     onSubmit={e => this.validateUser(e)}>
-                    <label htmlFor='login-email'>Email:</label>
+                    <label htmlFor='login-email'>Username:</label>
                     <input 
                         type='text' 
                         name='login-username'
@@ -78,6 +74,8 @@ class LoginPage extends React.Component {
                     <button type='submit'>Login</button>
                     <br />
                     <span className={this.displayReject()}>Username and password combo do not match our records</span>
+                    <p>or</p>
+                    <Link to={`/new-user`}><button>Create Account</button></Link>
                 </form>
             </div>
         )

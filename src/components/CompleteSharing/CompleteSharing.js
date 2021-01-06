@@ -5,17 +5,24 @@ import ScheduleaseContext from '../../ScheduleaseContext'
 class CompleteSharing extends React.Component {
     static contextType = ScheduleaseContext
 
+    
     getTimeslots = () => {
-        let tsIds = []
+        let finalized = []
+        let tsObj
         let schedule = this.context.complete.filter(entry => 
-            entry.schedule_id === this.props.match.params.schedId)
-        schedule.forEach(entry =>{
-            tsIds.push(entry.ts_id)
+            entry.schedule_id === parseInt(this.props.match.params.schedId))
+        schedule.forEach(entry => {
+            tsObj = this.context.timeslots.find(ts => ts.id === entry.timeslot)
+            finalized.push(
+                {
+                    "name": entry.people_name,
+                    "role": entry.role_name,
+                    "day": tsObj.day_name,
+                    "time": tsObj.timeslot
+                }
+            )
         })
-        let timeslots = this.context.timeslots.filter(entry =>
-            tsIds.some(x => entry.ts_id === x) === true)
-        schedule.map(entry => entry.ts_id = timeslots.find(ts => entry.ts_id === ts.ts_id))
-        return schedule
+        return finalized
     }
 
 
@@ -36,8 +43,8 @@ class CompleteSharing extends React.Component {
                     <tbody>
                     {sharingSched.map(entry =>
                         <tr>
-                            <td>{entry.ts_id.day}</td>
-                            <td>{entry.ts_id.timeslot}</td>
+                            <td>{entry.day}</td>
+                            <td>{entry.time}</td>
                             <td>{entry.name}</td>
                             <td>{entry.role}</td>
                         </tr> )}

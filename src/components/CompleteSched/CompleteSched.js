@@ -1,6 +1,7 @@
 import React from 'react'
 import './CompleteSched.css'
 import ScheduleaseContext from '../../ScheduleaseContext'
+import config from '../../config'
 
 
 class CompleteSched extends React.Component {
@@ -9,7 +10,8 @@ class CompleteSched extends React.Component {
         super(props)
         this.state = {
             roles: [],
-            completeSched: []
+            completeSched: [],
+            finalize: "hidden"
         }
     }
 
@@ -47,52 +49,52 @@ class CompleteSched extends React.Component {
         let timeslotsObj = []
 
         const timeslots = this.context.timeslots.filter(resp =>
-            resp.schedule_id = schedId)
+            resp.schedule_id === parseInt(schedId))
         const roles = this.context.roles.filter(resp =>
-            resp.schedule_id = schedId)
+            resp.schedule_id === parseInt(schedId))
         const avail = this.context.avail.filter(a =>
-            a.schedule_id === schedId)
+            a.schedule_id === parseInt(schedId))
         const people = this.context.people.filter(p =>
-            avail.some(a => a.user_id === p.id) === true)
-       
+            avail.some(a => a.people_id === p.id) === true)
+        
         timeslots.forEach(ts => {
             timeslotsObj.push({
-                id: ts.ts_id,
+                id: ts.id,
                 time: ts.timeslot,
-                day: ts.day,
+                day: ts.day_name,
                 roles: [],
                 people: []
             })
         })
         
         let fullList = []
-
         for (i=0; i < timeslotsObj.length; i++){
             roles.forEach(r => 
                 timeslotsObj[i].roles.push({
-                    value: r.role,
-                    num: avail.filter(a => a.timeslot === timeslotsObj[i].id &&
-                        a.role === r.role).length 
+                    value: r.role_name,
+                    num: avail.filter(a => a.timeslot === timeslotsObj[i] &&
+                        a.role_name === r.role_name).length 
                 })
             )
             avail.filter(a => a.timeslot === timeslotsObj[i].id).forEach(a =>{
-                person = people.find(p => a.user_id ===p.id)
+                person = people.find(p => a.people_id === p.id)
                 timeslotsObj[i].people.push({
-                    firstName: person.firstName,
-                    lastName: person.lastName,
+                    first_name: person.first_name,
+                    last_name: person.last_name,
                     email: person.email,
-                    role: a.role
+                    role: a.role_name
                 })
                 fullList.push(
                     {
                         day: timeslotsObj[i].day,
                         time: timeslotsObj[i].time,
-                        name: person.firstName + " " + person.lastName,
-                        role: a.role,
+                        name: person.first_name + " " + person.last_name,
+                        role: a.role_name,
                     }
                 )
             })
         }
+        
         return {timeslotsObj, fullList}
     }
 
@@ -138,13 +140,12 @@ class CompleteSched extends React.Component {
                                 completeSched.push({
                                     day: tsobj[item].day,
                                     time: tsobj[item].time,
-                                    name: peopleInRole[j].firstName + " " + peopleInRole[j].lastName,
+                                    name: peopleInRole[j].first_name + " " + peopleInRole[j].last_name,
                                     role: sr, 
                                     peopleInSlot: draft.timeslotsObj[item].people.filter(p => p.role === sr.value),
                                     ts_id: tsobj[item].id
                                 })
                                 tsobj[item].people = tsobj[item].people.filter(p => p.email !== peopleInRole[j].email)
-                                console.log(draft.timeslotsObj[item].people)
                             }
                         })
                     }
@@ -152,7 +153,6 @@ class CompleteSched extends React.Component {
             
             } 
         }
-
         return completeSched
     }
 
@@ -187,22 +187,51 @@ class CompleteSched extends React.Component {
         e.preventDefault()
         const schedToSend = completeSched.map(entry => {
             return {
-                schedule_id: this.props.match.params.schedId,
-                name: entry.name,
-                role: entry.role.value,
-                ts_id: entry.ts_id
+                "schedule_id": parseInt(this.props.match.params.schedId),
+                "people_name": entry.name,
+                "role_name": entry.role.value,
+                "timeslot": entry.ts_id
             }
         })
-        callback(schedToSend)
+
+        fetch(`${config.API_ENDPOINT}/complete`, {
+            method: 'POST',
+            body: JSON.stringify(schedToSend),
+            headers: {
+              'content-type': 'application/json',
+            }
+          })
+        .then(res => {
+            if (!res.ok){
+              throw new Error(res.status)
+            }
+            return res.json()
+          })
+          .then(data =>{
+                let addEntriesToList = []
+                data.map(data => {
+                    addEntriesToList.push({
+                        "id": data.id,
+                        "schedule_id": data.schedule_id,
+                        "people_name": data.people_name,
+                        "role_name": data.role_name,
+                        "timeslot": data.timeslot
+                    })
+                })
+                this.setState({
+                    finalize: "green"
+                })
+                callback(addEntriesToList)
+        })
     }
 
     componentDidMount() {
         const roles = this.context.roles.filter(resp =>
-            resp.schedule_id = this.props.match.params.schedId)
+            resp.schedule_id === parseInt(this.props.match.params.schedId))
         let rolesObj = []
         roles.forEach(r =>
             rolesObj.push({
-                value: r.role,
+                value: r.role_name,
                 num: 1,
                 dups: false
             }))
@@ -221,70 +250,79 @@ class CompleteSched extends React.Component {
         else{
             completeSched = this.state.completeSched
         }
+        if (draft && completeSched.length !== 0){
+            return(
+                <div className='complete-schedule'>
+                    <div className="controls">
+                        <p>How many people from each role do you want in one timeslot? Do you want people from one role to be on the schedule more than once?</p>
+                        <ul>
+                        {draft.timeslotsObj[0].roles.map(role =>
+                                <li key={role.value}>
+                                    <label htmlFor={role.value}>{role.value}</label>
+                                    <input 
+                                        className="num-roles" 
+                                        name={role.value} 
+                                        type="text" 
+                                        defaultValue={1}
+                                        onChange={e => this.updateRoleNum(e, role.value)}></input>
+                                    <label htmlFor="allow-duplicates">
+                                        Allow duplicates
+                                    </label>
+                                    <input 
+                                        name="allow-duplicates" 
+                                        type="checkbox"
+                                        onChange={e => this.updateAllowDuplicates(e, role.value)}>
+                                    </input>
 
-        return(
-            <div className='complete-schedule'>
-                <div className="controls">
-                    <p>How many people from each role do you want in one timeslot? Do you want people from one role to be on the schedule more than once?</p>
-                    <ul>
-                    {draft.timeslotsObj[0].roles.map(role =>
-                            <li key={role.value}>
-                                <label htmlFor={role.value}>{role.value}</label>
-                                <input 
-                                    className="num-roles" 
-                                    name={role.value} 
-                                    type="text" 
-                                    defaultValue={1}
-                                    onChange={e => this.updateRoleNum(e, role.value)}></input>
-                                <label htmlFor="allow-duplicates">
-                                    Allow duplicates
-                                </label>
-                                <input 
-                                    name="allow-duplicates" 
-                                    type="checkbox"
-                                    onChange={e => this.updateAllowDuplicates(e, role.value)}>
-                                </input>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {completeSched.map(entry =>
+                            <tr>
+                                <td>{entry.day}</td>
+                                <td>{entry.time}</td>
+                                <td><select
+                                    defaultValue={entry.name}
+                                    onChange={e => this.handleDropdownChange(e, entry.name, completeSched, entry.ts_id)}>
+                                    {entry.peopleInSlot.map(p =>
+                                        <option>{p.first_name + " " + p.last_name}</option>
+                                    )} 
+                                </select></td>
+                                <td>{entry.role.value}</td>
+                            </tr> )}
 
-                            </li>
-                        )}
-                    </ul>
+                        </tbody>
+                    </table>
+                    <button
+                        onClick={e => this.handleFinalizeClick(e, this.context.addCompleteSched, completeSched)}>
+                        Finalize for Sharing/Save Changes
+                    </button>  
+                    <span className={this.state.finalize}>Your changes have been saved.</span> 
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Name</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {completeSched.map(entry =>
-                        <tr>
-                            <td>{entry.day}</td>
-                            <td>{entry.time}</td>
-                            <td><select
-                                defaultValue={entry.name}
-                                onChange={e => this.handleDropdownChange(e, entry.name, completeSched, entry.ts_id)}>
-                                {entry.peopleInSlot.map(p =>
-                                    <option>{p.firstName + " " + p.lastName}</option>
-                                )} 
-                            </select></td>
-                            <td>{entry.role.value}</td>
-                        </tr> )}
-
-                    </tbody>
-                </table>
-                <button
-                    onClick={e => this.handleFinalizeClick(e, this.context.addCompleteSched, completeSched)}>
-                    Finalize for Sharing/Save Changes
-                </button>   
-            </div>
-        )
+            )
+        }
+        else{
+            return(
+                <div>
+                    <h1>Loading...</h1>
+                </div>
+            )
+        }
     }
 }
 
 export default CompleteSched
 
-//fix issue with rolesInSlot where the second slot only has the second perosn in the dropdwon
+
 //allowduplicates?

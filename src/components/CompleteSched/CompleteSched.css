@@ -8,3 +8,12 @@
 .num-roles {
     width: 70px
 }
+
+.hidden {
+    display: none
+}
+
+.green {
+    color: green;
+    font-weight: bold;
+}

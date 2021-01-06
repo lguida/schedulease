@@ -8,9 +8,9 @@ class NavLeft extends React.Component {
         return(
         <div className='nav-left'>
             <ul className='actions'>
-                <li><NavLink className='action-button' to={`/dashboard/schedule-settings/${schedId}`}>Schedule settings</NavLink></li>
-                <li><NavLink className='action-button' to={`/dashboard/responses/${schedId}`}>Responses</NavLink></li>
-                <li><NavLink className='action-button' to={`/dashboard/completed-schedule/${schedId}`}>Completed Schedule</NavLink></li>
+                <li><NavLink className='action-button' to={`/schedule/schedule-settings/${schedId}`}>Schedule settings</NavLink></li>
+                <li><NavLink className='action-button' to={`/schedule/responses/${schedId}`}>Responses</NavLink></li>
+                <li><NavLink className='action-button' to={`/schedule/completed-schedule/${schedId}`}>Completed Schedule</NavLink></li>
             </ul>
         </div>
         )

@@ -1,12 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router-dom'
 import './App.css';
-import Responses from './components/Responses/Responses'
+import SchedContent from './components/SchedContent/SchedContent'
 import LoginPage from './components/LoginPage/LoginPage'
 import NavLeft from './components/NavLeft/NavLeft'
 import NavTop from './components/NavTop/NavTop'
-import SchedSet from './components/SchedSet/SchedSet'
-import CompleteSched from './components/CompleteSched/CompleteSched'
 import NewSched from './components/NewSched/NewSched'
 import SchedList from './components/SchedList/SchedList'
 import Home from './components/Home/Home'
@@ -14,51 +12,117 @@ import Profile from './components/Profile/Profile'
 import Landing from './components/Landing/Landing'
 import NewUser from './components/NewUser/NewUser'
 import CompleteSharing from './components/CompleteSharing/CompleteSharing'
-import AvailFrom from './components/AvailForm/AvailForm'
+import AvailForm from './components/AvailForm/AvailForm'
 import Submitted from './components/Submitted/Submitted'
 import ErrorBound from './components/ErrorBound/ErrorBound'
+
+import authenticationService from './Auth/auth-service'
+import { withRouter } from 'react-router-dom'
 
 import config from './config'
 import store from './store'
 import ScheduleaseContext from './ScheduleaseContext'
+import { PrivateRoute } from './Auth/PrivateRoute';
 
 class App extends React.Component {
   state = {
-    schedules: store.schedules,
-    avail: store.avail,
-    people: store.people,
-    roles: store.roles,
-    timeslots: store.timeslots,
+    schedules: [],
+    avail: [],
+    people: [],
+    roles: [],
+    timeslots: [],
     complete: store.complete,
+    currentUser: null,
+    error: null,
   }
 
-  addSchedule = (schedule, roles, timeslots) => {
+  setPeople = people => {
     this.setState({
+      people: people,
+      error: null
+    })
+  }
+
+  setSchedules = schedules => {
+    this.setState({
+      schedules: schedules,
+      error: null
+    })
+  }
+  setRoles = roles => {
+    this.setState({
+        roles: roles,
+        error: null
+    })
+  }
+
+  setTimeslots = timeslots => {
+    this.setState({
+        timeslots:  timeslots,
+        error: null
+    })
+  }
+
+  setPeople = people => {
+      this.setState({
+          people: people,
+          error: null
+      })
+  }
+
+  setAvail = avail => {
+      this.setState({
+          avail: avail,
+          error: null
+      })
+  }
+  setComplete = complete => {
+    this.setState({
+        complete: complete,
+        error: null
+    })
+}
+
+  addSchedule = (schedule) => {
+    this.setState({ 
       schedules: [...this.state.schedules, schedule],
+    })
+  }
+  
+  addRoles = (roles) => {
+    this.setState({
       roles: [...this.state.roles, ...roles],
+    })
+  }
+
+  addTimeslots = (timeslots) => {
+    this.setState({ 
       timeslots: [...this.state.timeslots, ...timeslots]
     })
   }
 
-  addAvail = (person, avail, schedule) => {
-    if (person === "none"){
-      this.setState({
-        avail: [...this.state.avail, ...avail],
-        schedules: [...this.state.schedules.filter(s => s.id !== schedule.id), schedule]
-      })
-    }
-    else if (person === "update"){
-      this.setState({
-        avail: [...avail]
-      })
-    }
-    else{
-      this.setState({
-        avail: [...this.state.avail, ...avail],
-        people: [...this.state.people, person],
-        schedules: [...this.state.schedules.filter(s => s.id !== schedule.id), schedule]
-      })
-    }
+  addPerson = person => {
+    this.setState({
+      people: [...this.state.people, person],
+    })
+  }
+
+  addAvail = avail => {
+    this.setState({
+      avail: [...this.state.avail, ...avail]
+    })
+  }
+
+  removeAvail = avail => {
+    this.setState({
+      avail: [...avail]
+    })
+  }
+
+  editSchedule = (schedule) => {
+    this.setState({
+      schedules: [...this.state.schedules.filter(s => s.id !== schedule.id), schedule],
+    })
   }
   
   //may need to add something for updating
@@ -66,21 +130,6 @@ class App extends React.Component {
     this.setState({
       complete: [...this.state.complete, ...completeSched]
     })
-  }
-
-  addNewUser = (newUser, edit) => {
-    if (edit === "update"){
-      const newPeopleList = this.state.people.filter(entry => entry.email !== newUser.email)
-      console.log(newPeopleList)
-      this.setState({
-        people: [...newPeopleList, newUser]
-      })
-    }
-    else if (edit === "add"){
-      this.setState({
-        people: [...this.state.people, newUser]
-      })
-    }
   }
 
   convertFloatHoursToMinutes = (toConvert) => {
@@ -122,6 +171,121 @@ class App extends React.Component {
     return final
   }
 
+  componentDidMount() {
+    this.setState({
+      currentUser: localStorage.getItem('currentUser'),
+    })
+
+    fetch(`${config.API_ENDPOINT}/people/`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      }
+    })
+    .then(res => {
+      if (!res.ok){
+        throw new Error(res.status)
+      }
+      return res.json()
+      
+    })
+    .then(this.setPeople)
+    .catch(error => this.setState({ error }))
+  
+    if (localStorage.getItem('currentUser') !== null){
+      fetch(`${config.API_ENDPOINT}/schedules/user/${localStorage.getItem('currentUser')}`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        }
+      })
+      .then(res => {
+        if (!res.ok){
+          throw new Error(res.status)
+        }
+        return res.json()
+        
+      })
+      .then(this.setSchedules)
+      
+      .catch(error => this.setState({ error }))
+    
+      fetch(`${config.API_ENDPOINT}/roles`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        }
+      })
+      .then(res => {
+        if (!res.ok){
+          throw new Error(res.status)
+        }
+        return res.json()
+        
+      })
+      .then(this.setRoles)
+      .catch(error => this.setState({ error }))
+
+      fetch(`${config.API_ENDPOINT}/timeslots`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        }
+      })
+      .then(res => {
+        if (!res.ok){
+          throw new Error(res.status)
+        }
+        return res.json()
+        
+      })
+      .then(this.setTimeslots)
+      
+      .catch(error => this.setState({ error }))
+
+      fetch(`${config.API_ENDPOINT}/avail`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        }
+      })
+      .then(res => {
+        if (!res.ok){
+          throw new Error(res.status)
+        }
+        return res.json()
+        
+      })
+      .then(this.setAvail)
+      
+      .catch(error => this.setState({ error }))
+
+      fetch(`${config.API_ENDPOINT}/complete`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        }
+      })
+      .then(res => {
+        if (!res.ok){
+          throw new Error(res.status)
+        }
+        return res.json()
+        
+      })
+      .then(this.setComplete)
+      
+      .catch(error => this.setState({ error }))
+    }
+  }
+
+  
+  logout() {
+    authenticationService.logout();
+      this.props.history.push('/login')
+  }
+
+  
   render(){
     const contextValue = {
       schedules: this.state.schedules,
@@ -130,10 +294,15 @@ class App extends React.Component {
       roles: this.state.roles,
       timeslots: this.state.timeslots,
       complete: this.state.complete,
+      currentUser: this.state.currentUser,
       addSchedule: this.addSchedule,
+      addRoles: this.addRoles,
+      addPerson: this.addPerson,
+      removeAvail: this.removeAvail,
+      editSchedule: this.editSchedule,
+      addTimeslots: this.addTimeslots,
       addAvail: this.addAvail,
       addCompleteSched: this.addCompleteSched,
-      addNewUser: this.addNewUser,
       convertFloatHoursToMinutes: this.convertFloatHoursToMinutes,
       convertMinutesToFloat: this.convertMinutesToFloat,
     }
@@ -142,6 +311,9 @@ class App extends React.Component {
         <header>
         <ErrorBound>
           <Route path ='/dashboard/:option/:userId' component={NavTop} />
+        </ErrorBound>
+        <ErrorBound>
+          <Route path ='/schedule/:option/:schedId' component={NavTop} />
         </ErrorBound>
         </header>
         <main className='App'>
@@ -154,62 +326,47 @@ class App extends React.Component {
             </ErrorBound>
 
           <ErrorBound>
-            <Route exact path='/new-user' component={NewUser}/>
+            <Route path='/new-user' component={NewUser}/>
           </ErrorBound>
           
           <ErrorBound>
-            <Route path='/complete-schedule/:schedId' component={CompleteSharing}/>
+            <Route path='/complete-sharing/:schedId' component={CompleteSharing}/>
           </ErrorBound>
 
           <ErrorBound>
-            <Route path='/avail-form/:schedId' component={AvailFrom}/>
+            <Route path='/avail-form/:schedId' component={AvailForm}/>
           </ErrorBound>
 
           <div className='group'>
             <ErrorBound>
-              <Route path ='/dashboard/schedule-settings/:schedId' component={NavLeft} />
+              <PrivateRoute path ='/schedule/:option/:schedId' component={NavLeft} />
             </ErrorBound>
               
             <ErrorBound>
-              <Route exact path='/dashboard/schedule-settings/:schedId' component={SchedSet}/>
+              <PrivateRoute path ='/schedule/:option/:schedId' component={SchedContent} />
             </ErrorBound>
 
-
-            <ErrorBound>
-              <Route path ='/dashboard/completed-schedule/:schedId' component={NavLeft} />
-            </ErrorBound>
-
-            <ErrorBound>
-              <Route exact path='/dashboard/completed-schedule/:schedId' component={CompleteSched}/>
-            </ErrorBound>
-
-            <ErrorBound>
-              <Route path ='/dashboard/responses/:schedId' component={NavLeft} />
-            </ErrorBound>
-
-            <ErrorBound>
-              <Route exact path='/dashboard/responses/:schedId' component={Responses}/>
-            </ErrorBound>
+            
           </div>
 
           <ErrorBound>
-            <Route path='/dashboard/new-schedule/:userId' component={NewSched} />
+            <PrivateRoute path='/dashboard/new-schedule/:userId' component={NewSched} />
           </ErrorBound>
 
           <ErrorBound>
-            <Route path='/dashboard/schedule-list/:userId' component={SchedList} />
+            <PrivateRoute path='/dashboard/schedule-list/:userId' component={SchedList} />
           </ErrorBound>
 
           <ErrorBound>
-            <Route path='/dashboard/home/:userId' component={Home} />
+            <PrivateRoute path='/dashboard/home/:userId' component={Home} />
           </ErrorBound>
 
           <ErrorBound>
-            <Route path='/dashboard/profile/:userId' component={Profile} />
+            <PrivateRoute path='/dashboard/profile/:userId' component={Profile} />
           </ErrorBound>
 
           <ErrorBound>
-            <Route path= '/submitted' component={Submitted} />
+            <PrivateRoute path= '/submitted' component={Submitted} />
           </ErrorBound>
 
         
@@ -219,4 +376,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);

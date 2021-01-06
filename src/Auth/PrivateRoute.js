@@ -17,6 +17,8 @@ export const PrivateRoute = ({ component: Component, roles, ...rest }) => (
             return <Redirect to={{ pathname: '/'}} />
         }
 
+        //LG ^^ update that to check if the params person_id 
+
         // authorised so return component
         return <Component {...props} />
     }} />

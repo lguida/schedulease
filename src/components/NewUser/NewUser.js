@@ -3,7 +3,7 @@ import './NewUser.css'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ScheduleaseContext from '../../ScheduleaseContext'
-import { v4 as uuidv4 } from 'uuid'
+import config from '../../config'
  
 class NewUser extends React.Component {
     static contextType = ScheduleaseContext
@@ -169,36 +169,82 @@ class NewUser extends React.Component {
     handleSubmit = (e, callback) => {
         e.preventDefault()
         const existingemail = this.context.people.filter(user => user.email === this.state.email.value.trim())
-        console.log(existingemail, existingemail.length)
         if (existingemail.length > 0 && existingemail[0].account === false){
-            console.log(existingemail)
             const userToUpdate = {
-                id: existingemail[0].id,
-                email: existingemail[0].email,
-                account: true,
-                firstName: this.state.firstName.value,
-                lastName: this.state.lastName.value,
-                username: this.state.username.value,
-                password: this.state.password.value,
-                schedules: []
+                "account": true,
+                "first_name": this.state.firstName.value,
+                "last_name": this.state.lastName.value,
+                "username": this.state.username.value,
+                "password": this.state.password.value,
             }
+            fetch(`${config.API_ENDPOINT}/people/id/${existingemail[0].id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(userToUpdate),
+                headers: {
+                  'content-type': 'application/json',
+                }
+            })
+            .then(res => {
+                if (!res.ok){
+                  throw new Error(res.status)
+                }
+                return res.json()
+            })
+            .then(data => {
+                const newPerson = {
+                    "id": data.id,
+                    "first_name": data.first_name,
+                    "last_name": data.last_name,
+                    "email": data.email,
+                    "account": data.account,
+                    "username": data.username,
+                    "password": data.password,
+                }
+                callback(newPerson, "add")
+                this.props.history.push(`/dashboard/home/${data.id}`)
+            })
+
+
             callback(userToUpdate, "update")
             this.props.history.push(`/dashboard/home/${existingemail[0].id}`)
         }
         else{
-            const newUserId = uuidv4()
-            const userToAdd = {
-                id: newUserId,
-                email: this.state.email.value,
-                account: true,
-                firstName: this.state.firstName.value,
-                lastName: this.state.lastName.value,
-                username: this.state.username.value,
-                password: this.state.password.value,
-                schedules: []
+            const personToAdd = {
+                "first_name": this.state.firstName.value,
+                "last_name": this.state.lastName.value,
+                "email": this.state.email.value,
+                "account": true,
+                "username": this.state.username.value,
+                "password": this.state.password.value,
             }
-            callback(userToAdd, "add")
-            this.props.history.push(`/dashboard/home/${newUserId}`)
+            console.log(personToAdd)
+    
+            fetch(`${config.API_ENDPOINT}/people`, {
+                method: 'POST',
+                body: JSON.stringify(personToAdd),
+                headers: {
+                  'content-type': 'application/json',
+                }
+            })
+            .then(res => {
+                if (!res.ok){
+                  throw new Error(res.status)
+                }
+                return res.json()
+            })
+            .then(data => {
+                const newPerson = {
+                    "id": data.id,
+                    "first_name": this.state.firstName.value,
+                    "last_name": this.state.lastName.value,
+                    "email": this.state.email.value,
+                    "account": true,
+                    "username": this.state.username.value,
+                    "password": this.state.password.value,
+                }
+                callback(newPerson, "add")
+                this.props.history.push(`/dashboard/home/${data.id}`)
+            })
         }
     }
 
@@ -206,7 +252,7 @@ class NewUser extends React.Component {
         return(
             <div className='new-user'>
                 <form
-                    onSubmit={e=> this.handleSubmit(e, this.context.addNewUser)}>
+                    onSubmit={e=> this.handleSubmit(e, this.context.addPerson)}>
                     <label htmlFor='new-username'>New Username:</label>
                     <input 
                         type='text' 

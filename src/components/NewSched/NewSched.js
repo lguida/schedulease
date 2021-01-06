@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import TimeSpanPickerPerDay from "../TimeSpanPickerPerDay/TimeSpanPickerPerDay"
 import NewTimeslots from "../NewTimeslots/NewTimeslots"
 import { v4 as uuidv4 } from 'uuid'
+import config from '../../config'
 
 
 class NewSched extends React.Component {
@@ -295,7 +296,7 @@ class NewSched extends React.Component {
                     {
                     "schedule_id": newSchedId,
                     "timeslot": ts.time,
-                    "day": ts.day + ", " + months[counter.getMonth()] + " " + counter.getDate()
+                    "day_name": ts.day + ", " + months[counter.getMonth()] + " " + counter.getDate()
                 }))
             counter.setDate(counter.getDate() +1)
         }
@@ -303,36 +304,116 @@ class NewSched extends React.Component {
         
     }
 
-    handleSubmit = (e, callback) => {
-        e.preventDefault()
-        const newSchedId = uuidv4()
-        const scheduleToAdd = {
-            "id": newSchedId,
-            "schedule_name": this.state.scheduleName.value,
-            "user_id": this.props.match.params.userId,
-            "status": "open",
-            "responses": 0,
-            "startDate:": this.state.startDate,
-            "endDate": this.state.endDate,
-            "meeting_duration": this.state.duration
-        }
+    postRolesAndTimeslots = (newSchedId, cbAddRoles, cbAddTS) => {
         let rolesToAdd = []
         this.state.roles.map(role => 
             rolesToAdd.push({
                 "schedule_id": newSchedId,
-                "role": role,
-            }))
+                "role_name": role,
+            })
+        )
+        fetch(`${config.API_ENDPOINT}/roles`, {
+            method: 'POST',
+            body: JSON.stringify(rolesToAdd),
+            headers: {
+              'content-type': 'application/json',
+            }
+          })
+        .then(res => {
+            if (!res.ok){
+              throw new Error(res.status)
+            }
+            return res.json()
+          })
+          .then(data =>{
+                let addRolesToList = []
+                data.map(data => {
+                    addRolesToList.push({
+                        "id": data.id,
+                        "schedule_id": data.schedule_id,
+                        "role_name": data.role_name
+                    })
+                })
+            cbAddRoles(addRolesToList)
+        })
+
         let timeslotsToAdd = this.addMonthAndDate(newSchedId)
-        console.log(timeslotsToAdd)
-        callback(scheduleToAdd, rolesToAdd, timeslotsToAdd)
-        this.props.history.push(`/dashboard/schedule-list/${this.props.match.params.userId}`)
+        fetch(`${config.API_ENDPOINT}/timeslots`, {
+            method: 'POST',
+            body: JSON.stringify(timeslotsToAdd),
+            headers: {
+              'content-type': 'application/json',
+            }
+          })
+        .then(res => {
+            if (!res.ok){
+              throw new Error(res.status)
+            }
+            return res.json()
+          })
+          .then(data =>{
+                let addTimeslotsToList = []
+                data.map(data => {
+                    addTimeslotsToList.push({
+                        "id": data.id,
+                        "schedule_id": data.schedule_id,
+                        "timeslot": data.timeslot,
+                        "day": data.day_name
+                    })
+                })
+            cbAddTS(addTimeslotsToList)
+        })
+       
+    }
+
+    handleSubmit = (e, cbAddSched, cbAddRoles, cbAddTS) => {
+        e.preventDefault()
+        const scheduleToAdd = {
+            "schedule_name": this.state.scheduleName.value,
+            "people_id": parseInt(this.props.match.params.userId),
+            "status": "open",
+            "responses": 0,
+            "start_date": this.state.startDate,
+            "end_date": this.state.endDate,
+            "meeting_duration": this.state.duration
+        }
+
+        fetch(`${config.API_ENDPOINT}/schedules`, {
+            method: 'POST',
+            body: JSON.stringify(scheduleToAdd),
+            headers: {
+              'content-type': 'application/json',
+            }
+          })
+        .then(res => {
+            if (!res.ok){
+              throw new Error(res.status)
+            }
+            return res.json()
+          })
+          .then(data =>{
+              const addScheduleToList = {
+                    "id": data.id,
+                    "schedule_name": this.state.scheduleName.value,
+                    "people_id": this.props.match.params.userId,
+                    "status": "open",
+                    "responses": 0,
+                    "start_date:": this.state.startDate,
+                    "end_date": this.state.endDate,
+                    "meeting_duration": this.state.duration
+                }
+            cbAddSched(addScheduleToList)
+            this.postRolesAndTimeslots(data.id, cbAddRoles, cbAddTS)
+            this.props.history.push(`/dashboard/schedule-list/${this.props.match.params.userId}`)
+        })
+        .catch(error => console.log(error))
     }
 
     render(){
         return(
             <div className='new-schedule'>
                 <form
-                    onSubmit={e => {this.handleSubmit(e, this.context.addSchedule)}}>
+                    onSubmit={e => {this.handleSubmit(e, this.context.addSchedule, this.context.addRoles, this.context.addTimeslots)}}>
                         
                     <label htmlFor='sched-name'>Schedule name:</label>
                     <input  
