@@ -463,25 +463,25 @@ class AvailForm extends React.Component {
                         this.context.editSchedule,
                         this.context.removeAvail, 
                         schedId)}}>
-                    <label htmlFor='participant-first-name'>First name:</label>
+                    <label>First name:</label>
                     <input 
                         name='participant-first-name'
                         onChange={e => this.updateFirstName(e.target.value)}/>
                     <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span> 
                     <br/>
-                    <label htmlFor='participant-last-name'>Last name:</label>
+                    <label>Last name:</label>
                     <input 
                         name='participant-last-name'
                         onChange={e => this.updateLastName(e.target.value)}/>
                     <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span> 
                     <br/>
-                    <label htmlFor='participant-email'>Email Address:</label>
+                    <label>Email Address:</label>
                     <input 
                         name='participant-email'
                         onChange={e => this.updateEmail(e.target.value)}/>
                     <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
                     <br/>
-                    <label htmlFor='role-select'>Role:</label>
+                    <label>Role:</label>
                     <select
                         onChange={e => this.updateRole(e.target.value)}>
                             <option>Select role</option>
@@ -493,7 +493,7 @@ class AvailForm extends React.Component {
                     </select>
                     <span className={this.displayRoleWarning()}>{this.validateRole()}</span> 
                     <br/>
-                    <label htmlFor='Avail'>Select Available Timeframes</label>
+                    <label>Select Available Timeframes</label>
                     <br/>
                     <ul>
                         {timeslots.map(ts =>
@@ -504,7 +504,7 @@ class AvailForm extends React.Component {
                                 name={ts.timeslot} 
                                 value={ts.id}
                                 onChange={e => this.updateTimeslots(e, ts.day_name)}/>
-                           <label htmlFor={ts.timeslot}>{ts.day_name}: {ts.timeslot}</label>
+                           <label>{ts.day_name}: {ts.timeslot}</label>
                         </li> )}
                     </ul>
                     <span className={this.displayTimeslotsWarning()}>{this.validateTimeslots()}</span> 

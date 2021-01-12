@@ -28,7 +28,7 @@ class NavTop extends React.Component {
     
 
     render(){
-        const userId = this.context.currentUser
+        const userId = parseInt(this.props.match.params.userId)
         return(
             <nav className='nav-top'>
                 <ul className="menu">

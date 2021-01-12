@@ -172,12 +172,12 @@ class NewTimeslot extends React.Component {
         const timeslots = this.createTimeslots()
 
         return(
-            <div name='Avail'>
+            <div>
                 <input 
                 type="checkbox" 
                 name="select-all"
                 onChange={e => this.selectAll(e, timeslots)}/>
-                <label htmlFor="select-all">Select All</label>
+                <label>Select All</label>
                 <table>
                     <thead>
                         <tr>
@@ -200,7 +200,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Monday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -214,7 +214,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Tuesday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -228,7 +228,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Wednesday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -242,7 +242,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Thursday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -256,7 +256,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Friday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -282,7 +282,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Saturday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>
@@ -296,7 +296,7 @@ class NewTimeslot extends React.Component {
                                         name={slot} 
                                         value={slot}
                                         onChange={e => this.updateTimeslots(e, "Sunday")}/>
-                                        <label htmlFor={slot}>{slot}</label>
+                                        <label>{slot}</label>
                                     </li>)}
                             </ul>
                         </td>

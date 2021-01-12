@@ -2,6 +2,7 @@ import React from 'react'
 import './CompleteSched.css'
 import ScheduleaseContext from '../../ScheduleaseContext'
 import config from '../../config'
+import { Link } from 'react-router-dom'
 
 
 class CompleteSched extends React.Component {
@@ -11,7 +12,11 @@ class CompleteSched extends React.Component {
         this.state = {
             roles: [],
             completeSched: [],
-            finalize: "hidden"
+            finalize: "hidden",
+            ready: {
+                sharing: '',
+                save:''
+            }
         }
     }
 
@@ -219,7 +224,8 @@ class CompleteSched extends React.Component {
                     })
                 })
                 this.setState({
-                    finalize: "green"
+                    finalize: "green",
+                    ready: "sharing-button"
                 })
                 callback(addEntriesToList)
         })
@@ -238,10 +244,23 @@ class CompleteSched extends React.Component {
         this.setState({
             roles: [...rolesObj]
         })
+        const isThereACompleteSched = this.context.complete.filter(c => 
+            c.schedule_id === parseInt(this.props.match.params.schedId))
+        if (isThereACompleteSched.length === 0){
+            this.setState({
+                ready: {save: "save-button", sharing: "hidden"}
+            })
+        }
+        else{
+            this.setState({
+                ready: {save: "hidden", sharing: "sharing-button"}
+            })
+        }
+
     }
 
     render(){
-        const schedId = this.props.match.params.schedId
+        const schedId = parseInt(this.props.match.params.schedId)
         const draft = this.createScheduleDraft(schedId)
         let completeSched
         if (this.state.completeSched.length === 0){
@@ -258,14 +277,14 @@ class CompleteSched extends React.Component {
                         <ul>
                         {draft.timeslotsObj[0].roles.map(role =>
                                 <li key={role.value}>
-                                    <label htmlFor={role.value}>{role.value}</label>
+                                    <label>{role.value}</label>
                                     <input 
                                         className="num-roles" 
                                         name={role.value} 
                                         type="text" 
                                         defaultValue={1}
                                         onChange={e => this.updateRoleNum(e, role.value)}></input>
-                                    <label htmlFor="allow-duplicates">
+                                    <label>
                                         Allow duplicates
                                     </label>
                                     <input 
@@ -304,18 +323,29 @@ class CompleteSched extends React.Component {
 
                         </tbody>
                     </table>
-                    <button
+                    <button className={this.state.ready.save}
                         onClick={e => this.handleFinalizeClick(e, this.context.addCompleteSched, completeSched)}>
-                        Finalize for Sharing/Save Changes
+                        Finalize for Sharing
                     </button>  
                     <span className={this.state.finalize}>Your changes have been saved.</span> 
+                    <Link className={this.state.ready.sharing} to={`/complete-sharing/${schedId}`}><button>Share Complete Schedule</button></Link>
                 </div>
             )
         }
         else{
             return(
-                <div>
-                    <h1>Loading...</h1>
+                <div className='complete-schedule'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <span>No responses yet</span>
                 </div>
             )
         }

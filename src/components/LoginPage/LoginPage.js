@@ -36,7 +36,8 @@ class LoginPage extends React.Component {
         e.preventDefault()
         authenticationService.login(this.state.username, this.state.password)
             .then(user =>
-                {this.props.history.push(`/dashboard/home/${user[0].id}`)},
+                {console.log(user)
+                    this.props.history.push(`/dashboard/home/${user[0].id}`)},
                 error => {
                     this.setState({
                         noMatch: true
@@ -59,13 +60,13 @@ class LoginPage extends React.Component {
             <div className='login-page'>
                 <form
                     onSubmit={e => this.validateUser(e)}>
-                    <label htmlFor='login-email'>Username:</label>
+                    <label>Username:</label>
                     <input 
                         type='text' 
                         name='login-username'
                         onChange={e => this.updateUsername(e)}/>
                     <br />
-                    <label htmlFor='login-password'>Password</label>
+                    <label>Password</label>
                     <input 
                         type='password' 
                         name='login-password'

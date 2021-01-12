@@ -193,7 +193,7 @@ class App extends React.Component {
     .catch(error => this.setState({ error }))
   
     if (localStorage.getItem('currentUser') !== null){
-      fetch(`${config.API_ENDPOINT}/schedules/user/${localStorage.getItem('currentUser')}`, {
+      fetch(`${config.API_ENDPOINT}/schedules`, {
         method: 'GET',
         headers: {
           'content-type': 'application/json',

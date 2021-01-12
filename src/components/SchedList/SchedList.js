@@ -8,7 +8,8 @@ class SchedList extends React.Component {
 
 
     render(){
-        const userSchedules = this.context.schedules
+        const userSchedules = this.context.schedules.filter(s => 
+            s.people_id === parseInt(this.props.match.params.userId))
         return(
             <div className='schedule-list'>
                 <table>

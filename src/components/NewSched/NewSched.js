@@ -7,7 +7,6 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import TimeSpanPickerPerDay from "../TimeSpanPickerPerDay/TimeSpanPickerPerDay"
 import NewTimeslots from "../NewTimeslots/NewTimeslots"
-import { v4 as uuidv4 } from 'uuid'
 import config from '../../config'
 
 
@@ -121,11 +120,10 @@ class NewSched extends React.Component {
     }
 
     addRole = (role, e) => {
-        console.log(role)
-        console.log(this.state.roles)
         e.preventDefault()
         this.setState({
             roles: [...this.state.roles, role],
+            newRole: {value: '', touched: false}
         })
     }
 
@@ -261,7 +259,7 @@ class NewSched extends React.Component {
             return "Enter a start date"
         }
         else if (this.state.endDate.length === 0){
-            return "Endter an end date"
+            return "Enter an end date"
         }
     }
 
@@ -415,17 +413,18 @@ class NewSched extends React.Component {
                 <form
                     onSubmit={e => {this.handleSubmit(e, this.context.addSchedule, this.context.addRoles, this.context.addTimeslots)}}>
                         
-                    <label htmlFor='sched-name'>Schedule name:</label>
+                    <label>Schedule name:</label>
                     <input  
                         type='text'
                         name='sched-name'
                         onChange={e => this.updateName(e.target.value)}/>
                     <span className={this.displaySchedNameWarning()}>{this.validateSchedName()}</span> 
                     <br/>
-                    <label htmlFor='roles-input'>Roles:</label>
+                    <label>Roles:</label>
                     <input 
                         type='text' 
                         name='roles-input'
+                        value={this.state.newRole.value}
                         onChange={e => this.updateRole(e.target.value)}/>
                     <button 
                         disabled={this.validateNewRole()}
@@ -449,7 +448,7 @@ class NewSched extends React.Component {
                     </span> 
                     <br/>
 
-                    <label htmlFor='meeting-duration'>Meeting duration:</label>
+                    <label>Meeting duration:</label>
                     <select
                         defaultValue="1 hour"
                         onChange={e => this.updateDuration(e.target.value)}>
@@ -459,8 +458,8 @@ class NewSched extends React.Component {
                         <option>1 hour</option>
                     </select>
                     <br/>
-                    <label htmlFor="timeframe">Select a timeframe to use:</label>
-                    <div name='timeframe'>
+                    <label>Select a timeframe to use:</label>
+                    <div>
                         <label>Start:</label>
                         <DatePicker 
                             selected={this.state.startDate} 
@@ -484,7 +483,7 @@ class NewSched extends React.Component {
 
                     </div>
                     
-                    <label htmlFor='Avail'>Select Available Timeslots</label>
+                    <label>Select Available Timeslots</label>
                     <br/>
                     <span className={this.displayWarnings(this.validateTimeslots)}>
                         {this.validateTimeslots()}

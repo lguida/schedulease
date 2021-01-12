@@ -253,42 +253,42 @@ class NewUser extends React.Component {
             <div className='new-user'>
                 <form
                     onSubmit={e=> this.handleSubmit(e, this.context.addPerson)}>
-                    <label htmlFor='new-username'>New Username:</label>
+                    <label>New Username:</label>
                     <input 
                         type='text' 
                         name='new-username'
                         onChange={e=> this.updateUsername(e.target.value)}/>
                     <span className={this.displayUsernameWarning()}>{this.validateUsername()}</span> 
                     <br/>
-                    <label htmlFor='new-email'>Email Address:</label>
+                    <label>Email Address:</label>
                     <input 
                         type='text' 
                         name='new-email'
                         onChange={e=> this.updateEmail(e.target.value)}/>
                     <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
                     <br/>
-                    <label htmlFor='new-firstname'>First Name:</label>
+                    <label>First Name:</label>
                     <input 
                         type='text' 
                         name='new-firstname'
                         onChange={e=> this.updateFirstName(e.target.value)}/>
                     <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span>
                     <br/>
-                    <label htmlFor='new-lastname'>Last Name:</label>
+                    <label>Last Name:</label>
                     <input 
                         type='text' 
                         name='new-lastname'
                         onChange={e=> this.updateLastName(e.target.value)}/>
                     <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span>
                     <br/>
-                    <label htmlFor='password-one'>Password:</label>
+                    <label>Password:</label>
                     <input 
                         type='password' 
                         name='password-one'
                         onChange={e=> this.updatePassword(e.target.value)}/>
                     <span className={this.displayPasswordWarning()}>{this.validatePassword()}</span> 
                     <br/>
-                    <label htmlFor='password-two'>Re-enter Password:</label>
+                    <label>Re-enter Password:</label>
                     <input 
                         type='password' 
                         name='password-two'

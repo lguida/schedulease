@@ -1,5 +1,6 @@
 import React from 'react'
 import './Responses.css'
+import { Link } from 'react-router-dom'
 import ScheduleaseContext from '../../ScheduleaseContext'
 
 class Responses extends React.Component {
@@ -23,9 +24,9 @@ class Responses extends React.Component {
                 "role_name": x.role_name 
             })
         })
-
-        return(
-            <div className='responses'>
+        if (people.length === 0) {
+            return (
+                <div className='responses'>
                 <table>
                     <thead>
                         <tr>
@@ -34,18 +35,37 @@ class Responses extends React.Component {
                             <th>Role</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {listEntries.map(resp =>
-                        <tr key={resp.id}>
-                            <td>{resp.first_name} {resp.last_name}</td>
-                            <td>{resp.email}</td>
-                            <td>{resp.role_name}</td>
-                        </tr>
-                        )}
-                    </tbody> 
                 </table>
+                <br/>
+                <span>No responses yet</span>
+                <p><Link className='indiv-schedule-link' to={`/avail-form/${schedId}`}>Share Availability Form</Link></p>
             </div>
-        )
+            )
+        }
+        else{
+            return(
+                <div className='responses'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {listEntries.map(resp =>
+                            <tr key={resp.id}>
+                                <td>{resp.first_name} {resp.last_name}</td>
+                                <td>{resp.email}</td>
+                                <td>{resp.role_name}</td>
+                            </tr>
+                            )}
+                        </tbody> 
+                    </table>
+                </div>
+            )
+        }
     }
 }
 

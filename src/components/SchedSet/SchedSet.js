@@ -25,30 +25,29 @@ class SchedSet extends React.Component {
         if (roles && schedule && timeslots){
             return(
                 <div className='schedule-settings'>
-                    <span htmlFor='sched-name'>Schedule name: {schedule.schedule_name} </span>
+                    <span>Schedule name: {schedule.schedule_name} </span>
                 <br/>
-                <span htmlFor='roles-input'>Roles:</span>
+                <span>Roles:</span>
                 <ul>
                     {roles.map(r =>
                         <li key={r.id}>{r.role_name}</li>)}
                 </ul>
                 <br/>
-                <span htmlFor='meeting-duration'>Meeting duration: {schedule.meeting_duration}</span>
+                <span>Meeting duration: {schedule.meeting_duration}</span>
                 <br/>
-                <label htmlFor='Avail'>Timeslots:</label>
+                <label>Timeslots:</label>
                 <br/>
                 <ul>
                     {timeslots.map(slot =>
                         <li key={uuidv4()}>{slot.day_name}: {slot.timeslot}</li>)}
                 </ul>
-                <Link className='indiv-schedule-link' to={`/complete-sharing/${schedId}`}><button>Share Complete Schedule</button></Link>
                 <p><Link className='indiv-schedule-link' to={`/avail-form/${schedId}`}>Share Availability Form</Link></p>
                 </div>
             )
         }
         else{
             return(
-                <div>
+                <div className='schedule-settings'>
                     <h1>Loading...</h1>
                 </div>
             )
