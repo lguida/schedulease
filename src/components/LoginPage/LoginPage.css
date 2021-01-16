@@ -5,3 +5,55 @@
 .warning{
     color: red;
 }
+
+
+.login-page {
+    border: 2px solid #454955;
+    border-radius: 3px;
+    margin: auto;
+    text-align: left;
+    padding: 20px;
+    width: 320px;
+}
+
+.login-page input[type="text"], .login-page input[type="password"]
+{
+    height: 33px;
+    width: 300px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.login-page button {
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin-top: 10px;
+}
+
+.login-page button:disabled {
+    background-color:  #8089a3; 
+    color: #cbd7fa
+}
+
+.login-page button:enabled {
+    background-color: #72B01D; 
+    color: black;
+}
+
+.login-page button:hover:enabled {
+    background-color: #98E72C;
+    color: black;
+}
+
+.login-page button:active:enabled {
+    background-color: #3F7D20;
+    color: black;
+}
+
+.login-page-buttons {
+    margin:auto;
+    text-align: center;
+}

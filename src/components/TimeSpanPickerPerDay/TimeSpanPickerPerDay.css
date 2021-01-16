@@ -1,0 +1,12 @@
+.time-span-picker{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.time-span-picker tr th{
+    padding-bottom: 3px;
+}
+
+.time-span-picker tr td{
+    padding-bottom: 3px;
+}

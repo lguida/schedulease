@@ -60,7 +60,7 @@ class AvailForm extends React.Component {
 
     validateFirstName = () => {
         if (this.state.firstName.value.trim().length === 0){
-            return "Enter your first name"
+            return "*Enter your first name"
         }
     }
 
@@ -76,7 +76,7 @@ class AvailForm extends React.Component {
 
     validateLastName = () => {
         if (this.state.lastName.value.trim().length === 0){
-            return "Enter your last name"
+            return "*Enter your last name"
         }
     }
 
@@ -92,7 +92,7 @@ class AvailForm extends React.Component {
 
     validateEmail = () => {
         if (this.state.email.value.trim().length === 0){
-            return "Enter your email"
+            return "*Enter your email"
         }
     }
 
@@ -108,7 +108,7 @@ class AvailForm extends React.Component {
 
     validateRole = () => {
         if (this.state.role.value === "Select role"){
-            return "Select a role"
+            return "*Select a role"
         }
     }
 
@@ -464,20 +464,26 @@ class AvailForm extends React.Component {
                         this.context.removeAvail, 
                         schedId)}}>
                     <label>First name:</label>
+                    <br/>
                     <input 
                         name='participant-first-name'
+                        type='text'
                         onChange={e => this.updateFirstName(e.target.value)}/>
                     <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span> 
                     <br/>
                     <label>Last name:</label>
+                    <br/>
                     <input 
                         name='participant-last-name'
+                        type='text'
                         onChange={e => this.updateLastName(e.target.value)}/>
                     <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span> 
                     <br/>
                     <label>Email Address:</label>
+                    <br/>
                     <input 
                         name='participant-email'
+                        type='text'
                         onChange={e => this.updateEmail(e.target.value)}/>
                     <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
                     <br/>
@@ -491,6 +497,7 @@ class AvailForm extends React.Component {
                                 {role.role_name}
                             </option>)}
                     </select>
+                    <br/>
                     <span className={this.displayRoleWarning()}>{this.validateRole()}</span> 
                     <br/>
                     <label>Select Available Timeframes</label>

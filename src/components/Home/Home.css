@@ -1,0 +1,24 @@
+.home p {
+    margin-left: 10%;
+    margin-right: 10%
+}
+
+.home button {
+    background-color: #72B01D; 
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin-top: 10px;
+    cursor: pointer
+}
+
+.home button:hover {
+    background-color: #98E72C;
+}
+
+.home button:active {
+    background-color: #3F7D20;
+}
+

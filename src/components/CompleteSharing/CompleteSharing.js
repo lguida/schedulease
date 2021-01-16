@@ -1,6 +1,7 @@
 import React from 'react'
 import './CompleteSharing.css'
 import ScheduleaseContext from '../../ScheduleaseContext'
+import { scheduled } from 'rxjs'
 
 class CompleteSharing extends React.Component {
     static contextType = ScheduleaseContext
@@ -28,9 +29,11 @@ class CompleteSharing extends React.Component {
 
     render(){
         const sharingSched = this.getTimeslots()
-        console.log(sharingSched)
+        const schedule = this.context.schedules.find(sched =>
+            sched.id === parseInt(this.props.match.params.schedId))
         return(
             <div className='complete-schedule'>
+                <h2>{schedule.schedule_name}</h2>
                 <table>
                     <thead>
                         <tr>

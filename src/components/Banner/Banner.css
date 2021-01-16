@@ -1,0 +1,10 @@
+.banner h1{
+    text-align: center;
+    background-color: #3F7D20;
+    font-family: 'Lakki Reddy', cursive !important;
+    color: white;
+    margin: 0;
+    padding-top: 25px;
+    font-size: 50px;
+    -webkit-text-stroke: .1px black;
+}

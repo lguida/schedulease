@@ -4,3 +4,37 @@
     flex: 3;
     margin: 10px;    
 }
+
+.responses p {
+    background-color: #72B01D; 
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin: 10px auto;
+    width: 250px;
+}
+
+.responses p a{
+    color:black;
+}
+.responses p a:visited{
+    color:black;
+}
+
+.responses p:hover {
+    background-color: #98E72C;
+}
+
+.responses p:active {
+    background-color: #3F7D20;
+}
+
+.responses table {
+    margin-left: 20px;
+}
+
+.responses td {
+    text-align: left;
+}

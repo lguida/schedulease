@@ -121,10 +121,12 @@ class NewSched extends React.Component {
 
     addRole = (role, e) => {
         e.preventDefault()
+        if (role.split(" ").join("").length !==0){
         this.setState({
             roles: [...this.state.roles, role],
             newRole: {value: '', touched: false}
         })
+    }
     }
 
     deleteRole = (role, e) => {
@@ -201,10 +203,10 @@ class NewSched extends React.Component {
         const dup = schedsPerUser.filter(sched =>
             sched.schedule_name.toUpperCase() === name.toUpperCase())
         if (name.length === 0){
-            return "Schedule name is required"
+            return "*Schedule name is required"
         }
         else if (dup.length !== 0){
-            return "Schedule name already exits! Name it something else."
+            return "*Schedule name already exits! Name it something else."
         }
     }
 
@@ -244,7 +246,7 @@ class NewSched extends React.Component {
 
     validateRoles = () => {
         if (this.state.roles.length === 0){
-            return "Enter at least one role. If you don't need that function, consider naming your role something like 'General'."
+            return "*Enter at least one role. If you don't need that function, consider naming your role something like 'General'."
         }
     }
 
@@ -253,20 +255,20 @@ class NewSched extends React.Component {
         const start = new Date(this.state.startDate)
         const end = new Date(this.state.endDate)
         if (start.getTime() > end.getTime()){
-            return "Start date must be before end date"
+            return "*Start date must be before end date"
         }
         else if (this.state.startDate.length === 0){
-            return "Enter a start date"
+            return "*Enter a start date"
         }
         else if (this.state.endDate.length === 0){
-            return "Enter an end date"
+            return "*Enter an end date"
         }
     }
 
 
     validateTimeslots = () => {
         if (this.state.timeslots.length === 0){
-            return "Select at least one timeslot"
+            return "*Select at least one timeslot"
         }
     }
 
@@ -288,7 +290,6 @@ class NewSched extends React.Component {
         let dayOfWeek
         while(counter <= new Date(this.state.endDate)){
             dayOfWeek = weekDays[counter.getDay()]
-            console.log(dayOfWeek)
             this.state.timeslots.filter(ts => ts.day === dayOfWeek)
                 .forEach(ts => timeslotsToAdd.push(
                     {
@@ -411,79 +412,97 @@ class NewSched extends React.Component {
         return(
             <div className='new-schedule'>
                 <form
-                    onSubmit={e => {this.handleSubmit(e, this.context.addSchedule, this.context.addRoles, this.context.addTimeslots)}}>
-                        
+                    onSubmit={e => {this.handleSubmit(e, this.context.addSchedule, this.context.addRoles, this.context.addTimeslots)}}>  
                     <label>Schedule name:</label>
+                    <br/>
                     <input  
                         type='text'
                         name='sched-name'
                         onChange={e => this.updateName(e.target.value)}/>
+                    <br/>
                     <span className={this.displaySchedNameWarning()}>{this.validateSchedName()}</span> 
                     <br/>
+                    <br/>
                     <label>Roles:</label>
-                    <input 
-                        type='text' 
-                        name='roles-input'
-                        value={this.state.newRole.value}
-                        onChange={e => this.updateRole(e.target.value)}/>
-                    <button 
-                        disabled={this.validateNewRole()}
-                        onClick={(e) => this.addRole(this.state.newRole.value, e)}>
-                        Add Role
-                    </button>
-                    <span className={this.displayNewRoleWarning()}>
-                        {this.validateNewRole()}
-                    </span> 
-                    <ul>
+                    <br/>
+                    <ul className='roles-ul'>
                         {this.state.roles.map(role =>
-                            <li key={role}>{role} 
-                            <button 
-                                onClick={e => this.deleteRole(role, e)}>
-                                Delete
-                            </button></li>
+                            <li key={role}>
+                                <button 
+                                    onClick={e => this.deleteRole(role, e)}>
+                                    Delete
+                                </button>
+                                {role} 
+                            </li>
                         )}
                     </ul>
                     <span className={this.displayWarnings(this.validateRoles)}>
                         {this.validateRoles()}
                     </span> 
+                    <div className='add-role-mini-form'>
+                        <input 
+                            type='text' 
+                            name='roles-input'
+                            value={this.state.newRole.value}
+                            onChange={e => this.updateRole(e.target.value)}/>
+                        <button 
+                            className='add-role-button'
+                            disabled={this.validateNewRole()}
+                            onClick={(e) => this.addRole(this.state.newRole.value, e)}>
+                            Add Role
+                        </button>
+                    </div>
                     <br/>
-
-                    <label>Meeting duration:</label>
-                    <select
-                        defaultValue="1 hour"
-                        onChange={e => this.updateDuration(e.target.value)}>
-                        <option>15 minutes</option>
-                        <option>30 minutes</option>
-                        <option>45 minutes</option>
-                        <option>1 hour</option>
-                    </select>
+                    <span className={this.displayNewRoleWarning()}>
+                        {this.validateNewRole()}
+                    </span> 
+                    
                     <br/>
-                    <label>Select a timeframe to use:</label>
+                    <div className='meeting-duration-option'>
+                        <label>Meeting duration:</label>
+                        <select
+                            defaultValue="1 hour"
+                            onChange={e => this.updateDuration(e.target.value)}>
+                            <option>15 minutes</option>
+                            <option>30 minutes</option>
+                            <option>45 minutes</option>
+                            <option>1 hour</option>
+                        </select>
+                    </div>
+                    <br/>
                     <div>
-                        <label>Start:</label>
-                        <DatePicker 
-                            selected={this.state.startDate} 
-                            onChange={this.updateStartDatetime}
-                        />
+                        <label>Select a date frame to use:</label>
+                    </div>
+                    <br/>
+                    <div>
+                        <div className='date-frame-select'>
+                            <label>Start:</label>
+                            <br/>
+                            <DatePicker 
+                                selected={this.state.startDate} 
+                                onChange={this.updateStartDatetime}
+                            />
+                            
+                            <br />
+                            <br />
+                            <label>End:</label>
+                            <br/>
+                            <DatePicker 
+                                selected={this.state.endDate} 
+                                onChange={this.updateEndDatetime}/>
                         
-
-                        <br />
-                        <label>End:</label>
-                        <DatePicker 
-                            selected={this.state.endDate} 
-                            onChange={this.updateEndDatetime}/>
-                        <br />
-                        <span className={this.displayWarnings(this.validateDates)}>
-                            {this.validateDates()}
-                        </span> 
+                            <br />
+                            <span className={this.displayWarnings(this.validateDates)}>
+                                {this.validateDates()}
+                            </span> 
+                        </div>
                         <br />
                         <TimeSpanPickerPerDay 
                             updateTimeframe={this.updateTimeframe}
                             days={this.state.days}/>
-
                     </div>
                     
-                    <label>Select Available Timeslots</label>
+                    <label>Select Available Timeslots:</label>
                     <br/>
                     <span className={this.displayWarnings(this.validateTimeslots)}>
                         {this.validateTimeslots()}
@@ -500,6 +519,7 @@ class NewSched extends React.Component {
                     />
                     
                     <button 
+                        className='create-new-sched-button'
                         type='submit'
                         disabled={
                             this.validateSchedName() ||

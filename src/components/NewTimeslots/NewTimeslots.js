@@ -172,12 +172,14 @@ class NewTimeslot extends React.Component {
         const timeslots = this.createTimeslots()
 
         return(
-            <div>
-                <input 
-                type="checkbox" 
-                name="select-all"
-                onChange={e => this.selectAll(e, timeslots)}/>
-                <label>Select All</label>
+            <div className='time-slot-picker'>
+                <div className='select-all'>
+                    <input 
+                    type="checkbox" 
+                    name="select-all"
+                    onChange={e => this.selectAll(e, timeslots)}/>
+                    <label>Select All</label>
+                </div>
                 <table>
                     <thead>
                         <tr>

@@ -23,18 +23,23 @@ class SchedList extends React.Component {
                     </thead>
                     <tbody>
                         {userSchedules.map(sched =>
+                            
                             <tr key={sched.id}>
-                                <td><Link 
-                                    className='indiv-schedule-link' 
-                                    to={`/schedule/schedule-settings/${sched.id}`}>
-                                    {sched.schedule_name}</Link></td>
+                                <td>
+                                    <Link className='indiv-schedule-link' to={`/schedule/schedule-settings/${sched.id}`}>
+                                        {sched.schedule_name}
+                                    </Link>
+                                </td>
                                 <td>{sched.status}</td>
                                 <td>{sched.responses}</td>
                                 <td>{sched.meeting_duration}</td>
-                            </tr>)}
+                                
+                            </tr>)
+                            }
                     </tbody>
                 </table>
             </div>
+            
         )
     }
 }

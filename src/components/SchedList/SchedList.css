@@ -5,4 +5,35 @@
 
 .schedule-list th, .schedule-list td {
     padding: 5px;
+    padding-left: 10px;
+}
+
+
+.schedule-list table {
+    border-collapse: collapse;
+    border: 2px solid black;
+    margin-bottom: 40px;
+}
+
+.schedule-list tbody tr, .schedule-list tbody t{
+    border-collapse: collapse;
+    border: 1px solid #b4b2b6;
+    text-align: left;
+}
+
+.schedule-list tbody tr:hover {
+    background-color: #F3EFF5;
+}
+
+.schedule-list .indiv-schedule-link {
+    color:#3F7D20;
+    
+}
+
+.indiv-schedule-link{
+    text-decoration: none; 
+}
+
+.indiv-schedule-link:hover{
+    font-weight: bold;
 }

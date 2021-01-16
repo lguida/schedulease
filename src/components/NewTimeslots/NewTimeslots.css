@@ -1,0 +1,19 @@
+.time-slot-picker {
+    margin-top: 10px;
+}
+
+.time-slot-picker label{
+    font-weight: normal;
+}
+
+.time-slot-picker ul{
+    padding: 0;
+}
+
+.time-slot-picker td{
+    padding-right: 10px;
+}
+
+.select-all{
+    margin-bottom: 5px;
+}

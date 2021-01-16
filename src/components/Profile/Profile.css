@@ -1,3 +1,15 @@
-li {
-    list-style: none;
+
+.profile table {
+    margin: auto;
+    text-align: left;
+    background-color: #DADFF7;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 2px solid #0D0A0B;
 }
+
+.profile td{
+    padding: 5px 10px;
+
+}
+

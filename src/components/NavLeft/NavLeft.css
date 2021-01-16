@@ -5,16 +5,24 @@
     margin: 10px;    
 }
 
+.nav-left ul {
+    padding: 0;
+    margin-left: 15px;
+}
+
 .nav-left li {
     text-align: center;
-    border: 1px solid black;
-    margin: 5px;
     text-decoration: none;
     list-style: none;
+    border-radius:  3px;
+    transition-duration: .2s;
+    border: 2px solid #0D0A0B;
+    margin: 5px;
+    background-color: #3F7D20;
 }
 
 .nav-left li:hover {
-    background-color: aliceblue;
+    background-color: #F3EFF5;
 }
 
 .action-button {
@@ -22,8 +30,9 @@
     text-decoration: none;
     padding: 5px;
     color: black;
+    font-weight: bold;
 }
 
 .action-button.active {
-    background-color: lightblue;
+    background-color: #8cd821;
 }

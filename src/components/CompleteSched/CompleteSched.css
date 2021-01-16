@@ -25,3 +25,47 @@
 .save-button {
     color: green;
 }
+
+.complete-schedule li {
+    list-style: none;
+    padding-bottom: 5px;
+}
+
+.complete-schedule .controls table {
+    margin: auto;
+    margin-bottom: 20px;
+    width: 300px;
+    text-align: left;
+}
+
+.complete-schedule input {
+    width: 45px;
+    margin-left: 10px;
+}
+
+.complete-schedule .schedule-table {
+    margin-bottom: 20px;
+}
+
+.complete-schedule .schedule-table td{
+    text-align: left;
+}
+
+.complete-schedule button {
+    background-color: #72B01D; 
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin: 10px auto;
+    width: 250px;
+}
+
+.complete-schedule button:hover {
+    background-color: #98E72C;
+}
+
+.complete-schedule button:active {
+    background-color: #3F7D20;
+}

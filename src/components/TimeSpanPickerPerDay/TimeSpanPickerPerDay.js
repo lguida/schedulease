@@ -205,7 +205,7 @@ class TimeSpanPickerPerDay extends React.Component {
         const daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         const timeDropdownJSX = this.createTimeDropdownJSX()
         return(
-            <div>
+            <div className='time-span-picker'>
                 <table>
                     <thead>
                         <tr>

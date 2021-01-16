@@ -8,3 +8,35 @@
 .schedule-settings li {
     list-style: none;
 }
+
+
+.schedule-settings p {
+    background-color: #72B01D; 
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin: 10px auto;
+    width: 200px;
+}
+
+.schedule-settings p a {
+    color: black;
+}
+
+.schedule-settings p:hover {
+    background-color: #98E72C;
+}
+
+.schedule-settings p:active {
+    background-color: #3F7D20;
+}
+
+.schedule-settings ul{
+    text-align: left;
+}
+
+.schedule-settings label {
+    font-weight: bold;
+}

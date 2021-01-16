@@ -1,0 +1,34 @@
+.landing p {
+    width: 600px;
+    margin: 30px auto;
+}
+
+.landing button {
+    border: 2px solid #454955;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition-duration: .3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.landing button:disabled {
+    background-color:  #8089a3; 
+    color: #cbd7fa
+}
+
+.landing button:enabled {
+    background-color: #72B01D; 
+    color: black;
+}
+
+.landing button:hover:enabled {
+    background-color: #98E72C;
+    color: black;
+}
+
+.landing button:active:enabled {
+    background-color: #3F7D20;
+    color: black;
+}

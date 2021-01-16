@@ -11,11 +11,18 @@ class Profile extends React.Component {
         return(
             <div className='profile'>
                 <h1>Hi {user.first_name}!</h1>
-                <ul>
-                    <li>Name: {user.first_name} {user.last_name}</li>
-                    <li>Email: {user.email}</li>
-                    
-                </ul>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{user.first_name} {user.last_name}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>{user.email}</td>
+                        </tr>
+                    </tbody> 
+                </table>
             </div>
         )
     }

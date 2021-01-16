@@ -1,0 +1,11 @@
+.complete-schedule{
+    margin: 0;
+}
+
+.complete-schedule table{
+    margin: 20px 40px;
+}
+
+.complete-schedule td {
+    text-align: left;
+}

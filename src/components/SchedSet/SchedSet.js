@@ -25,23 +25,30 @@ class SchedSet extends React.Component {
         if (roles && schedule && timeslots){
             return(
                 <div className='schedule-settings'>
-                    <span>Schedule name: {schedule.schedule_name} </span>
-                <br/>
-                <span>Roles:</span>
-                <ul>
-                    {roles.map(r =>
-                        <li key={r.id}>{r.role_name}</li>)}
-                </ul>
-                <br/>
-                <span>Meeting duration: {schedule.meeting_duration}</span>
-                <br/>
-                <label>Timeslots:</label>
-                <br/>
-                <ul>
-                    {timeslots.map(slot =>
-                        <li key={uuidv4()}>{slot.day_name}: {slot.timeslot}</li>)}
-                </ul>
-                <p><Link className='indiv-schedule-link' to={`/avail-form/${schedId}`}>Share Availability Form</Link></p>
+                    <h2>{schedule.schedule_name} </h2>
+
+                    <p><Link className='indiv-schedule-link' to={`/avail-form/${schedId}`}>Share Availability Form</Link></p>
+                
+                    <span>Meeting duration: {schedule.meeting_duration}</span>
+                    <br/>
+                    <div className='group'>
+                        <div className='sched-set-roles-list'> 
+                            <label>Roles:</label>
+                            <ul>
+                                {roles.map(r =>
+                                    <li key={r.id}>{r.role_name}</li>)}
+                            </ul>
+                        </div>
+                        <br/>
+                        <div className='sched-set-ts-list'>
+                            <label>Timeslots:</label>
+                            <br/>
+                            <ul>
+                                {timeslots.map(slot =>
+                                    <li key={uuidv4()}>{slot.day_name}: {slot.timeslot}</li>)}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             )
         }

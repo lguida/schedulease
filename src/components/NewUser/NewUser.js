@@ -217,7 +217,6 @@ class NewUser extends React.Component {
                 "username": this.state.username.value,
                 "password": this.state.password.value,
             }
-            console.log(personToAdd)
     
             fetch(`${config.API_ENDPOINT}/people`, {
                 method: 'POST',
@@ -253,58 +252,86 @@ class NewUser extends React.Component {
             <div className='new-user'>
                 <form
                     onSubmit={e=> this.handleSubmit(e, this.context.addPerson)}>
+                    <h2>Create New User</h2>
+                    <div className='nu-label-input-pair'>
                     <label>New Username:</label>
+                    <br/>
                     <input 
                         type='text' 
                         name='new-username'
                         onChange={e=> this.updateUsername(e.target.value)}/>
+                    <br/>
                     <span className={this.displayUsernameWarning()}>{this.validateUsername()}</span> 
+                    </div>
+
+                    <div className='nu-label-input-pair'>
+                        <label>Email Address:</label>
+                        <br/>
+                        <input 
+                            type='text' 
+                            name='new-email'
+                            onChange={e=> this.updateEmail(e.target.value)}/>
+                        <br/>
+                        <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
+                    </div>
+
+                    <div className='nu-label-input-pair'>
+                        <label>First Name:</label>
+                        <br/>
+                        <input 
+                            type='text' 
+                            name='new-firstname'
+                            onChange={e=> this.updateFirstName(e.target.value)}/>
+                        <br/>
+                        <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span>
+                    </div>
+
+                    <div className='nu-label-input-pair'>
+                        <label>Last Name:</label>
+                        <br/>
+                        <input 
+                            type='text' 
+                            name='new-lastname'
+                            onChange={e=> this.updateLastName(e.target.value)}/>
+                        <br/>
+                        <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span>
+                    </div>
+
+                    <div className='nu-label-input-pair'>
+                        <label>Password:</label>
+                        <br/>
+                        <input 
+                            type='password' 
+                            name='password-one'
+                            onChange={e=> this.updatePassword(e.target.value)}/>
+                        <br/>
+                        <span className={this.displayPasswordWarning()}>{this.validatePassword()}</span> 
+                    </div>
+
+                    <div className='nu-label-input-pair'>
+                        <label>Re-enter Password:</label>
+                        <br/>
+                        <input 
+                            type='password' 
+                            name='password-two'
+                            onChange={e=> this.updateRepeatPassword(e.target.value)}/>
+                        <br/>
+                        <span className={this.displayRepeatPasswordWarning()}>{this.validateRepeatPassword()}</span> 
+                    </div>
+
                     <br/>
-                    <label>Email Address:</label>
-                    <input 
-                        type='text' 
-                        name='new-email'
-                        onChange={e=> this.updateEmail(e.target.value)}/>
-                    <span className={this.displayEmailWarning()}>{this.validateEmail()}</span> 
-                    <br/>
-                    <label>First Name:</label>
-                    <input 
-                        type='text' 
-                        name='new-firstname'
-                        onChange={e=> this.updateFirstName(e.target.value)}/>
-                    <span className={this.displayFirstNameWarning()}>{this.validateFirstName()}</span>
-                    <br/>
-                    <label>Last Name:</label>
-                    <input 
-                        type='text' 
-                        name='new-lastname'
-                        onChange={e=> this.updateLastName(e.target.value)}/>
-                    <span className={this.displayLastNameWarning()}>{this.validateLastName()}</span>
-                    <br/>
-                    <label>Password:</label>
-                    <input 
-                        type='password' 
-                        name='password-one'
-                        onChange={e=> this.updatePassword(e.target.value)}/>
-                    <span className={this.displayPasswordWarning()}>{this.validatePassword()}</span> 
-                    <br/>
-                    <label>Re-enter Password:</label>
-                    <input 
-                        type='password' 
-                        name='password-two'
-                        onChange={e=> this.updateRepeatPassword(e.target.value)}/>
-                    <span className={this.displayRepeatPasswordWarning()}>{this.validateRepeatPassword()}</span> 
-                    <br/>
-                    <button 
-                        type='submit'
-                        disabled={
-                            this.validateUsername() ||
-                            this.validateEmail() ||
-                            this.validateFirstName() ||
-                            this.validateLastName() ||
-                            this.validatePassword() ||
-                            this.validateRepeatPassword()
-                        }>Create User</button>
+                    <div className='new-user-submit'>
+                        <button 
+                            type='submit'
+                            disabled={
+                                this.validateUsername() ||
+                                this.validateEmail() ||
+                                this.validateFirstName() ||
+                                this.validateLastName() ||
+                                this.validatePassword() ||
+                                this.validateRepeatPassword()
+                            }>Create User</button>
+                    </div>
                 </form>
             </div>
         )

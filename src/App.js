@@ -15,6 +15,7 @@ import CompleteSharing from './components/CompleteSharing/CompleteSharing'
 import AvailForm from './components/AvailForm/AvailForm'
 import Submitted from './components/Submitted/Submitted'
 import ErrorBound from './components/ErrorBound/ErrorBound'
+import Banner from './components/Banner/Banner'
 
 import authenticationService from './Auth/auth-service'
 import { withRouter } from 'react-router-dom'
@@ -315,6 +316,24 @@ class App extends React.Component {
         <ErrorBound>
           <Route path ='/schedule/:option/:schedId' component={NavTop} />
         </ErrorBound>
+        
+        <ErrorBound>
+          <Route path ='/login' component={Banner} /> 
+        </ErrorBound>
+        <ErrorBound>
+          <Route path ='/new-user' component={Banner} /> 
+        </ErrorBound>
+        <ErrorBound>
+          <Route path ='/complete-sharing/:schedId' component={Banner} /> 
+        </ErrorBound>
+        <ErrorBound>
+          <Route path ='/avail-form/:schedId' component={Banner} /> 
+        </ErrorBound>
+
+        <ErrorBound>
+          <Route path ='/' component={Banner} /> 
+        </ErrorBound>
+
         </header>
         <main className='App'>
           <ErrorBound>

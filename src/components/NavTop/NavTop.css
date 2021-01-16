@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lakki+Reddy&display=swap');
+
 header{
     padding: 0px;
     margin-bottom: 20px;
@@ -19,15 +21,17 @@ header nav ul{
 header nav li {
     border-radius:  3px;
     transition-duration: .2s;
-    border: 1px solid black;
+    border: 2px solid #0D0A0B;
     text-align: center;
     margin: 5px;
     text-decoration: none;
     list-style: none;
+    background-color: #5E6375;
 }
 
 header nav li:hover {
-    background-color: aliceblue;
+    background-color: #F3EFF5;
+    
 }
 
 .nav-button {
@@ -35,8 +39,42 @@ header nav li:hover {
     text-decoration: none;
     padding: 10px;
     color: black;
+    font-weight: bold;
 }
 
 .nav-button.active {
-    background-color: lightblue;
+    background-color: #DADFF7;
+    color: black;
+}
+
+button.nav-button  {
+    background-color: #5E6375;
+    border: none;
+    font-size: 16px;
+}
+
+button.nav-button:hover  {
+    background-color: #F3EFF5;
+    border: none
+}
+
+.banner-top h1 {
+    text-align: center;
+    background-color: #3F7D20;
+    font-family: 'Lakki Reddy', cursive !important;
+    color: white;
+    margin: 0;
+    padding-top: 25px;
+    font-size: 50px;
+    -webkit-text-stroke: .1px black;
+}
+
+.nav-top {
+    background-color: #72B01D;
+}
+
+.banner-top hr {
+    margin: 0;
+    border: 2px solid black;
+
 }

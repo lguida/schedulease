@@ -36,7 +36,7 @@ class LoginPage extends React.Component {
         e.preventDefault()
         authenticationService.login(this.state.username, this.state.password)
             .then(user =>
-                {console.log(user)
+                {
                     this.props.history.push(`/dashboard/home/${user[0].id}`)},
                 error => {
                     this.setState({
@@ -57,28 +57,35 @@ class LoginPage extends React.Component {
 
     render(){
         return(
+            <>
             <div className='login-page'>
+                
                 <form
                     onSubmit={e => this.validateUser(e)}>
                     <label>Username:</label>
+                    <br/>
                     <input 
                         type='text' 
                         name='login-username'
                         onChange={e => this.updateUsername(e)}/>
-                    <br />
-                    <label>Password</label>
+                    <br/>
+                    <label>Password:</label>
+                    <br/>
                     <input 
                         type='password' 
                         name='login-password'
                         onChange={e => this.updatePassword(e)}/>
                     <br/>
+                    <div className='login-page-buttons'>
                     <button type='submit'>Login</button>
-                    <br />
-                    <span className={this.displayReject()}>Username and password combo do not match our records</span>
-                    <p>or</p>
-                    <Link to={`/new-user`}><button>Create Account</button></Link>
+                        <br />
+                        <span className={this.displayReject()}>Username and password combo do not match our records</span>
+                        <p>or</p>
+                        <Link to={`/new-user`}><button>Create Account</button></Link>
+                    </div>
                 </form>
             </div>
+            </>
         )
     }
 }

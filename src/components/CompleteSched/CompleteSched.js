@@ -273,31 +273,25 @@ class CompleteSched extends React.Component {
             return(
                 <div className='complete-schedule'>
                     <div className="controls">
-                        <p>How many people from each role do you want in one timeslot? Do you want people from one role to be on the schedule more than once?</p>
-                        <ul>
-                        {draft.timeslotsObj[0].roles.map(role =>
-                                <li key={role.value}>
-                                    <label>{role.value}</label>
-                                    <input 
-                                        className="num-roles" 
-                                        name={role.value} 
-                                        type="text" 
-                                        defaultValue={1}
-                                        onChange={e => this.updateRoleNum(e, role.value)}></input>
-                                    <label>
-                                        Allow duplicates
-                                    </label>
-                                    <input 
-                                        name="allow-duplicates" 
-                                        type="checkbox"
-                                        onChange={e => this.updateAllowDuplicates(e, role.value)}>
-                                    </input>
-
-                                </li>
-                            )}
-                        </ul>
+                        <p>How many people from each role do you want in one timeslot?</p>
+                        <table>
+                            <tbody>
+                            {draft.timeslotsObj[0].roles.map(role =>
+                                    <tr key={role.value}>
+                                        <td><label>{role.value}</label></td>
+                                        <td><input 
+                                            className="num-roles" 
+                                            name={role.value} 
+                                            type="text" 
+                                            defaultValue={1}
+                                            onChange={e => this.updateRoleNum(e, role.value)}></input>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
-                    <table>
+                    <table className='schedule-table'>
                         <thead>
                             <tr>
                                 <th>Day</th>
@@ -345,6 +339,7 @@ class CompleteSched extends React.Component {
                             </tr>
                         </thead>
                     </table>
+                    <br/>
                     <span>No responses yet</span>
                 </div>
             )
@@ -355,4 +350,13 @@ class CompleteSched extends React.Component {
 export default CompleteSched
 
 
-//allowduplicates?
+//Do you want people from one role to be on the schedule more than once?
+/*  <label>
+        Allow duplicates
+    </label>
+    <input 
+        name="allow-duplicates" 
+        type="checkbox"
+        onChange={e => this.updateAllowDuplicates(e, role.value)}>
+    </input>
+*/

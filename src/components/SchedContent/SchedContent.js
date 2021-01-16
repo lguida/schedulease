@@ -5,7 +5,6 @@ import { PrivateRoute } from '../../Auth/PrivateRoute'
 import SchedSet from '../SchedSet/SchedSet'
 import CompleteSched from '../CompleteSched/CompleteSched'
 import Responses from '../Responses/Responses'
-import config from '../../config'
  
 class SchedContent extends React.Component {
     static contextType = ScheduleaseContext
@@ -20,7 +19,6 @@ class SchedContent extends React.Component {
     componentDidMount() {
         const currentSchedule = this.context.schedules.find(s => 
             s.id === parseInt(this.props.match.params.schedId))
-        console.log(currentSchedule, this.context.schedules, this.props.match.params.schedId)
         this.setState({
           currentUser: localStorage.getItem('currentUser'),
           schedule: currentSchedule
@@ -28,7 +26,6 @@ class SchedContent extends React.Component {
     }
 
     render(){
-        console.log(this.state.schedule)
         return(
             <>
                 <PrivateRoute  path='/schedule/schedule-settings/:schedId' component={SchedSet}/>

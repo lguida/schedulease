@@ -12,7 +12,7 @@ class NavTop extends React.Component {
         if (this.props.match.params.option === "schedule-settings" ||
             this.props.match.params.option === "responses" || 
             this.props.match.params.option === "completed-schedule"){
-            let schedule = this.context.schedules.find(s => s.id === this.props.match.params.userId)
+            let schedule = this.context.schedules.find(s => s.id === parseInt(this.props.match.params.schedId))
             userId = schedule.people_id
         }
         else{
@@ -28,17 +28,22 @@ class NavTop extends React.Component {
     
 
     render(){
-        const userId = parseInt(this.props.match.params.userId)
+        const userId = this.getUserId()
         return(
-            <nav className='nav-top'>
-                <ul className="menu">
-                    <li><NavLink className='nav-button' to={`/dashboard/home/${userId}`}>Home</NavLink></li>
-                    <li><NavLink className='nav-button' to={`/dashboard/new-schedule/${userId}`}>New Schedule</NavLink></li>
-                    <li><NavLink className='nav-button' to={`/dashboard/schedule-list/${userId}`}>Schedules</NavLink></li>
-                    <li><NavLink className='nav-button' to={`/dashboard/profile/${userId}`}>Profile</NavLink></li>
-                    <li><button className='nav-button' onClick={e => this.logout(e)}>Log Out</button></li>
-                </ul>
-            </nav>
+            <div className='banner-top'>
+                <h1>Schedulease</h1>
+                <hr/>
+                <nav className='nav-top'>
+                    
+                    <ul className="menu">
+                        <li><NavLink className='nav-button' to={`/dashboard/home/${userId}`}>Home</NavLink></li>
+                        <li><NavLink className='nav-button' to={`/dashboard/new-schedule/${userId}`}>New Schedule</NavLink></li>
+                        <li><NavLink className='nav-button' to={`/dashboard/schedule-list/${userId}`}>Schedules</NavLink></li>
+                        <li><NavLink className='nav-button' to={`/dashboard/profile/${userId}`}>Profile</NavLink></li>
+                        <li><button className='nav-button' onClick={e => this.logout(e)}>Log Out</button></li>
+                    </ul>
+                </nav>
+            </div>
         )
     }
 }
