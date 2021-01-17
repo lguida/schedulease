@@ -78,3 +78,21 @@ button.nav-button:hover  {
     border: 2px solid black;
 
 }
+
+@media all and (max-width: 505px){
+    header nav li {
+        font-size: 15px;
+    }
+    .nav-button {
+        padding: 5px;
+    }
+}
+
+@media all and (max-width: 440px){
+    .one-line{
+        padding: 17px 5px;
+    }
+    .two-line {
+        padding-bottom: 10px;
+    }
+}

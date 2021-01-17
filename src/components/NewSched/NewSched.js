@@ -416,6 +416,7 @@ class NewSched extends React.Component {
                     <label>Schedule name:</label>
                     <br/>
                     <input  
+                        className='new-sched-name'
                         type='text'
                         name='sched-name'
                         onChange={e => this.updateName(e.target.value)}/>

@@ -186,8 +186,6 @@ class NewTimeslot extends React.Component {
                         <th className={this.hideUnusedDays("Monday")}>Monday</th>
                         <th className={this.hideUnusedDays("Tuesday")}>Tuesday</th>
                         <th className={this.hideUnusedDays("Wednesday")}>Wednesday</th>
-                        <th className={this.hideUnusedDays("Thursday")}>Thursday</th>
-                        <th className={this.hideUnusedDays("Friday")}>Friday</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,6 +232,20 @@ class NewTimeslot extends React.Component {
                                     </li>)}
                             </ul>
                         </td>
+                       
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                        <th className={this.hideUnusedDays("Thursday")}>Thursday</th>
+                        <th className={this.hideUnusedDays("Friday")}>Friday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
                         <td className={this.hideUnusedDays("Thursday")}>
                             <ul>
                                 {timeslots.Thursday.map(slot =>
@@ -265,6 +277,7 @@ class NewTimeslot extends React.Component {
                         </tr>
                     </tbody>
                 </table>
+
                 <table>
                     <thead>
                         <tr>

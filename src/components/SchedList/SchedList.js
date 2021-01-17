@@ -15,7 +15,7 @@ class SchedList extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                            <th>ScheduleName</th>
+                            <th>Schedule Name</th>
                             <th>Status</th>
                             <th>Responses</th>
                             <th>Meeting Duration</th>

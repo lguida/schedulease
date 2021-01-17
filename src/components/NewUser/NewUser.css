@@ -63,3 +63,14 @@
 .new-user-submit {
     text-align: center;
 }
+
+@media all and (max-width: 440px){
+    .new-user {
+        width: auto;
+        margin: 10px;
+    }
+
+    .new-user input[type="text"], .new-user input[type="password"] {
+        width: 95%;
+    }
+}

@@ -37,3 +37,9 @@
 .indiv-schedule-link:hover{
     font-weight: bold;
 }
+
+@media all and (max-width: 500px){ 
+    .schedule-list table{
+        margin: 10px;
+    }
+}

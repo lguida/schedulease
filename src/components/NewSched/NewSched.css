@@ -146,3 +146,43 @@
     color: black;
 }
 
+@media all and (min-width: 600px) {
+    .new-schedule {
+        width: 500px;
+        margin: auto;
+    }
+}
+
+@media all and (max-width: 450px){
+    .date-frame-select {
+        width: 93%;
+    }
+}
+
+@media all and (max-width: 440px){
+    .new-schedule input[type="text"] {
+        width: 90%;
+    }
+
+    .add-role-mini-form {
+        width: 90%
+    }
+
+    .add-role-mini-form input[type="text"] {
+        width: 70%;
+    }
+
+    .add-role-mini-form button {
+        width: 30%;
+    }
+    .new-schedule {
+        margin: 8px;
+    }
+}
+@media all and (max-width: 453px){
+    .react-datepicker-wrapper{
+        width: 99%;
+    }
+}
+
+

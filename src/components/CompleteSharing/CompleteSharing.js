@@ -32,7 +32,7 @@ class CompleteSharing extends React.Component {
         const schedule = this.context.schedules.find(sched =>
             sched.id === parseInt(this.props.match.params.schedId))
         return(
-            <div className='complete-schedule'>
+            <div className='complete-schedule sharing'>
                 <h2>{schedule.schedule_name}</h2>
                 <table>
                     <thead>

@@ -331,7 +331,7 @@ class App extends React.Component {
         </ErrorBound>
 
         <ErrorBound>
-          <Route path ='/' component={Banner} /> 
+          <Route exact path ='/' component={Banner} /> 
         </ErrorBound>
 
         </header>

@@ -69,3 +69,13 @@
 .complete-schedule button:active {
     background-color: #3F7D20;
 }
+
+@media all and (max-width: 486px){
+    .complete-schedule table{
+        margin: 20px 0px;
+    } 
+    .schedule-table,  .complete-schedule table select{
+        font-size: 12px;
+    }
+    
+}

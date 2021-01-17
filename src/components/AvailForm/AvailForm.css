@@ -54,3 +54,15 @@
     background-color: #3F7D20;
     color: black;
 }
+
+@media all and (max-width: 420px){ 
+    .avail-form form input[type="text"]{
+        width: 95%;
+    }
+}
+
+@media all and (max-width: 390px){ 
+    .avail-form ul {
+        padding-left: 0px;
+    }
+}

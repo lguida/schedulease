@@ -1,11 +1,26 @@
-.complete-schedule{
+.sharing{
     margin: 0;
 }
 
-.complete-schedule table{
+.sharing table{
     margin: 20px 40px;
 }
 
-.complete-schedule td {
+.sharing td {
     text-align: left;
+}
+
+@media all and (max-width: 660px){
+    .sharing td {
+        font-size: 12px;
+    }
+}
+
+@media all and (max-width: 520px){ 
+    .sharing table {
+        margin: 20px 5px;
+    }
+    .sharing td {
+        padding: 1px 3px;
+    }
 }

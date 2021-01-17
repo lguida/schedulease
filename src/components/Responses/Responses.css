@@ -38,3 +38,11 @@
 .responses td {
     text-align: left;
 }
+
+@media all and (max-width: 486px){ 
+    .responses table {
+        margin-left: 0px;
+        font-size: 12px;
+    }
+    
+}

@@ -13,7 +13,9 @@ class NavTop extends React.Component {
             this.props.match.params.option === "responses" || 
             this.props.match.params.option === "completed-schedule"){
             let schedule = this.context.schedules.find(s => s.id === parseInt(this.props.match.params.schedId))
-            userId = schedule.people_id
+            if (schedule !== undefined){
+                userId = schedule.people_id
+            }
         }
         else{
             userId = this.props.match.params.userId
@@ -36,10 +38,10 @@ class NavTop extends React.Component {
                 <nav className='nav-top'>
                     
                     <ul className="menu">
-                        <li><NavLink className='nav-button' to={`/dashboard/home/${userId}`}>Home</NavLink></li>
-                        <li><NavLink className='nav-button' to={`/dashboard/new-schedule/${userId}`}>New Schedule</NavLink></li>
-                        <li><NavLink className='nav-button' to={`/dashboard/schedule-list/${userId}`}>Schedules</NavLink></li>
-                        <li><NavLink className='nav-button' to={`/dashboard/profile/${userId}`}>Profile</NavLink></li>
+                        <li><NavLink className='nav-button one-line' to={`/dashboard/home/${userId}`}>Home</NavLink></li>
+                        <li><NavLink className='nav-button two-line' to={`/dashboard/new-schedule/${userId}`}>New Schedule</NavLink></li>
+                        <li><NavLink className='nav-button one-line' to={`/dashboard/schedule-list/${userId}`}>Schedules</NavLink></li>
+                        <li><NavLink className='nav-button one-line' to={`/dashboard/profile/${userId}`}>Profile</NavLink></li>
                         <li><button className='nav-button' onClick={e => this.logout(e)}>Log Out</button></li>
                     </ul>
                 </nav>

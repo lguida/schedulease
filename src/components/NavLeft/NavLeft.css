@@ -36,3 +36,32 @@
 .action-button.active {
     background-color: #8cd821;
 }
+
+@media all and (max-width: 640px){ 
+    .nav-left ul {
+        margin-left: 0;
+    }
+    .actions {
+        display: flex;
+        flex-direction: row;
+        margin: 10px 0px;
+    }
+    .actions li{
+        flex: 1;
+        margin: 10px;
+    }
+
+}
+
+@media all and (max-width: 585px){ 
+    .switch-left, .one-line-left{
+        padding: 16px 0px;
+    }
+}
+
+@media all and (max-width: 486px){ 
+    .switch-left {
+        padding: 5px;
+    }
+    
+}
