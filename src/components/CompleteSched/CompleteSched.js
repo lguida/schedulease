@@ -166,25 +166,32 @@ class CompleteSched extends React.Component {
             item.ts_id === ts_id && prevValue === item.name)
         let bystanderObj = completeSched.find(item => 
             item.ts_id === ts_id && e.target.value === item.name)
+        
+        let completeSchedCopy = JSON.parse(JSON.stringify(completeSched))
+
+        console.log(targetObj)
+        console.log(bystanderObj)
 
         let targetIndex = completeSched.indexOf(targetObj)
         let bystanderIndex = completeSched.indexOf(bystanderObj)
-        if (bystanderObj.length === 0){
-            completeSched[targetIndex] = {
+        if (bystanderObj === undefined){
+            completeSchedCopy[targetIndex] = {
                 day: targetObj.day,
                 name: e.target.value,
                 peopleInSlot: targetObj.peopleInSlot,
+                role: targetObj.role,
                 time: targetObj.time,
                 ts_id: targetObj.ts_id
             }
         }
         else {
-            completeSched[targetIndex] = bystanderObj
-            completeSched[bystanderIndex] = targetObj
+            completeSchedCopy[targetIndex] = bystanderObj
+            completeSchedCopy[bystanderIndex] = targetObj
+            console.log('running', completeSchedCopy)
         }
 
         this.setState({
-            completeSched: completeSched
+            completeSched: completeSchedCopy
         })
     }
 
@@ -260,6 +267,7 @@ class CompleteSched extends React.Component {
     }
 
     render(){
+        console.log('rerender')
         const schedId = parseInt(this.props.match.params.schedId)
         const draft = this.createScheduleDraft(schedId)
         let completeSched
@@ -269,7 +277,9 @@ class CompleteSched extends React.Component {
         else{
             completeSched = this.state.completeSched
         }
+        console.log("complete",completeSched)
         if (draft && completeSched.length !== 0){
+            console.log("rendering", completeSched)
             return(
                 <div className='complete-schedule'>
                     <div className="controls">
@@ -301,7 +311,7 @@ class CompleteSched extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                        {completeSched.map(entry =>
+                        {this.createScheduleJSX(draft).map(entry =>
                             <tr>
                                 <td>{entry.day}</td>
                                 <td>{entry.time}</td>

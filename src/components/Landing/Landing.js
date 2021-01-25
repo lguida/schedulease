@@ -13,6 +13,11 @@ class Landing extends React.Component {
                 <span>or</span>
                 <br/>
                 <Link to={`/new-user`}><button>Create Account</button></Link>
+                <p>To test the app, feel free to use the demo credentials below:</p>
+                <ul>
+                    <li><strong>Username: </strong>DemoUser</li>
+                    <li><strong>Password: </strong>demopass</li>
+                </ul>
             </div>
         )
     }

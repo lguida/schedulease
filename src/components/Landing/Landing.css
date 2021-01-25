@@ -32,3 +32,7 @@
     background-color: #3F7D20;
     color: black;
 }
+
+.landing ul {
+    list-style: none;
+}
