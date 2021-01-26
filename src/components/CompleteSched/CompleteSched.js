@@ -148,7 +148,8 @@ class CompleteSched extends React.Component {
                                     name: peopleInRole[j].first_name + " " + peopleInRole[j].last_name,
                                     role: sr, 
                                     peopleInSlot: draft.timeslotsObj[item].people.filter(p => p.role === sr.value),
-                                    ts_id: tsobj[item].id
+                                    ts_id: tsobj[item].id,
+                                    update: [1]
                                 })
                                 tsobj[item].people = tsobj[item].people.filter(p => p.email !== peopleInRole[j].email)
                             }
@@ -169,8 +170,8 @@ class CompleteSched extends React.Component {
         
         let completeSchedCopy = JSON.parse(JSON.stringify(completeSched))
 
-        console.log(targetObj)
-        console.log(bystanderObj)
+
+        
 
         let targetIndex = completeSched.indexOf(targetObj)
         let bystanderIndex = completeSched.indexOf(bystanderObj)
@@ -181,13 +182,14 @@ class CompleteSched extends React.Component {
                 peopleInSlot: targetObj.peopleInSlot,
                 role: targetObj.role,
                 time: targetObj.time,
-                ts_id: targetObj.ts_id
+                ts_id: targetObj.ts_id,
+                update: targetObj.update.push(1)
             }
         }
         else {
             completeSchedCopy[targetIndex] = bystanderObj
             completeSchedCopy[bystanderIndex] = targetObj
-            console.log('running', completeSchedCopy)
+            completeSchedCopy[0].update = [...completeSchedCopy[0].update, 1]
         }
 
         this.setState({
@@ -267,7 +269,6 @@ class CompleteSched extends React.Component {
     }
 
     render(){
-        console.log('rerender')
         const schedId = parseInt(this.props.match.params.schedId)
         const draft = this.createScheduleDraft(schedId)
         let completeSched
@@ -277,9 +278,7 @@ class CompleteSched extends React.Component {
         else{
             completeSched = this.state.completeSched
         }
-        console.log("complete",completeSched)
         if (draft && completeSched.length !== 0){
-            console.log("rendering", completeSched)
             return(
                 <div className='complete-schedule'>
                     <div className="controls">
@@ -311,7 +310,7 @@ class CompleteSched extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                        {this.createScheduleJSX(draft).map(entry =>
+                        {completeSched.map(entry =>
                             <tr>
                                 <td>{entry.day}</td>
                                 <td>{entry.time}</td>
