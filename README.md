@@ -16,7 +16,7 @@ Create a new schedule: ![create a new schedule](rmImages/NewSchedule.png)
 
 View Responses: ![view responses](rmImages/Responses.png)
 
-Edit and create a finalized schedule for sharing: ![finalize schedule screen](rmImages/CompelteSchedule.png)
+Edit and create a finalized schedule for sharing: ![finalize schedule screen](rmImages/CompleteSchedule.png)
 
 
 ## Tech Used
