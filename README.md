@@ -1,7 +1,7 @@
 # Schedulease
 
 See live app here: https://schedulease.vercel.app/
-See this repo for back-end: 
+See this repo for back-end: https://github.com/lguida/schedulease-api
 
 ## Summary
 
